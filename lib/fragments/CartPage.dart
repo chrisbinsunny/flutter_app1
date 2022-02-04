@@ -1,7 +1,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app1/Resources/AppColors.dart';
+import 'package:flutter_app1/Checkout.dart';
 
 class CartPage extends StatefulWidget{
   @override
@@ -16,7 +16,7 @@ class _CartPageState extends State<CartPage> {
         child: Column(
           children: [
               Expanded(child: _setCartData()),
-            Checkout()
+            Payment(context)
           ],
         ),
       ),
@@ -145,7 +145,7 @@ Widget _cartListItem(int index){
   );
 }
 
-Widget Checkout() {
+Widget Payment(BuildContext context) {
   return Padding(
     padding: const EdgeInsets.only(top: 20.0,bottom: 50,right: 30,left: 30),
   child: Container(
@@ -278,10 +278,10 @@ Widget Checkout() {
             width: 200,
             child: FlatButton(
               onPressed: () {
-              /*  Navigator.push(
+                Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => HomeBase()),
-                );*/
+                  MaterialPageRoute(builder: (context) => Checkout()),
+                );
               },
               child: Text(
                 'Proceed To PAY',

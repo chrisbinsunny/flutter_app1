@@ -4,7 +4,7 @@ import 'package:flutter_app1/Resources/AppColors.dart';
 import 'package:flutter_app1/Contact_Us.dart';
 import 'package:flutter_app1/How_it_Works.dart';
 import 'package:flutter_app1/About_Us.dart';
-import 'package:flutter_app1/product_detail.dart';
+import 'package:flutter_app1/Dashboard.dart';
 
 class Profile extends StatefulWidget {
   @override
@@ -13,7 +13,7 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> {
   var profileSubArray = [
-    'Your Orders',
+    'Dashboard',
     'How it Works',
     'Contact Us',
     'About Us',
@@ -179,12 +179,15 @@ class _ProfileState extends State<Profile> {
 
                     switch (index) {
                       case 0:
-                      // executeClosed();
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => ProfileScreen()),
+                        );
                         break;
                       case 1:
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => ProductDetailPage()),
+                          MaterialPageRoute(builder: (context) => How_it_Works()),
                         );
                         break;
                       case 2:

@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.rawfinity.flutter_app1">
    <application
-        android:label="flutter_app1"
+        android:label="Poshrobe"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

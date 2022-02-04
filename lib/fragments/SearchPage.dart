@@ -167,7 +167,7 @@ Widget _recommendedListData() {
               ),
             ),
           ),
-          Padding(
+         /* Padding(
             padding: const EdgeInsets.only(top: 8.0),
             child: SizedBox(
               width: 185.0,
@@ -179,7 +179,7 @@ Widget _recommendedListData() {
                 style: TextStyle(color: Colors.black87, fontSize: 12.0),
               ),
             ),
-          ),
+          ),*/
         ],
       ),
     ),
