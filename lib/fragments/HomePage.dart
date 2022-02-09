@@ -1,8 +1,15 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter_app1/Resources/AppColors.dart';
+import 'package:poshrob/Resources/AppColors.dart';
+import 'package:poshrob/accounts/LoginPage.dart';
+import 'package:poshrob/backend/backend_class.dart';
+import 'package:poshrob/backend/backend_data.dart';
+import 'package:poshrob/shared_pref.dart';
+
+import '../sizes.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -20,48 +27,88 @@ class _HomePageState extends State<HomePage>
     'Monica Geller'
   ];
 
-  final List<Tab> tabs = <Tab>[
-    new Tab(text: "Sherwani"),
-    new Tab(text: "Indo Western"),
-    new Tab(text: "Tuxedo"),
-    new Tab(text: "Suits"),
-    new Tab(text: "Jodhpuri"),
-    new Tab(text: "Kurtha Pyjama"),
-    new Tab(text: "Bundi Jacket")
-  ];
 
-  TabController? _tabController;
+  List<Tab> tabs=[];
+  List<Header> headers=[];
+  List<Product> featuredProducts=[];
+  List<Product> recommendedProducts=[];
+
+  late Future _future;
+  String selectedCategory="475";
+
+  Future _getHomeContents() async {
+    try {
+      await Future.wait([
+        getHeaderCategories().then(
+                (value) {
+                  value.forEach((element) {
+                    tabs.add(Tab(text: element.name, ));
+                    headers.add(element);
+                  });
+
+                }
+        ),
+        getFeaturedProducts().then(
+                (value) {
+              value.forEach((element) {
+                featuredProducts.add(element);
+              });
+
+            }
+        ),
+        getRecommendedProducts().then(
+                (value) {
+              value.forEach((element) {
+                recommendedProducts.add(element);
+              });
+
+            }
+        ),
+      ]);
+      return tabs;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
 
   @override
   void initState() {
+    _future = _getHomeContents();
     super.initState();
-    _tabController = new TabController(vsync: this, length: tabs.length);
   }
 
   @override
   void dispose() {
-    _tabController!.dispose();
+    tabs.clear();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
+    return Scaffold(
+      body: Column(
         children: [
           Padding(
             padding: const EdgeInsets.only(top: 50),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 30),
-                  child: Image(
-                    image: AssetImage('images/hamburger_ico.png'),
+                InkWell(
+                  onTap: (){
+                    HelperFunctions.saveUserLoggedIn(false);
+                    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
+                    LoginPage()), (Route<dynamic> route) => false);
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 30),
+                    child: Image(
+                      image: AssetImage('images/hamburger_ico.png'),
+                    ),
                   ),
                 ),
                 Image(
-                  image: AssetImage('images/applogo.png'),
+                  image: AssetImage('images/app_logo.png'),
                   width: 120,
                   height: 50,
                 ),
@@ -72,21 +119,33 @@ class _HomePageState extends State<HomePage>
               ],
             ),
           ),
-          Flexible(
-              child: ListView(
-                padding: const EdgeInsets.all(8),
-                shrinkWrap: true,
-                physics: ScrollPhysics(),
-                children: <Widget>[
-                  _topbar(),
-                  _tabLayouts(),
-                  _categoryWidget(),
-                  _setFeaturedProduct(),
-                  _banner(),
-                  _setRecommendedList()
-                ],
-              )
-          )
+          FutureBuilder(
+            future: _future,
+            builder: (context, AsyncSnapshot snapshot) {
+              if (snapshot.hasData) {
+                return Flexible(
+                    child: ListView(
+                      padding: const EdgeInsets.all(8),
+                      shrinkWrap: true,
+                      physics: ScrollPhysics(),
+                      children: <Widget>[
+                        //_topbar(),
+                        _tabLayouts(),
+                        _tabProducts(),
+                        _categoryWidget(),
+                        _setFeaturedProduct(),
+                        _setRecommendedList()
+                      ],
+                    )
+                );
+              }
+              return SizedBox(
+                  height: screenHeight(context, mulBy: 0.3),
+                  child: Center(child: CircularProgressIndicator(
+                    color: Color(AppColors.commonOrange),
+                  )));
+            },
+          ),
 
         ],
       ),
@@ -147,45 +206,125 @@ class _HomePageState extends State<HomePage>
   }
 
   Widget _tabLayouts() {
+    return DefaultTabController(
+      length: tabs.length,
+      child: TabBar(
+        isScrollable: true,
+        unselectedLabelColor: Colors.grey,
+        labelColor: Colors.white,
+        indicatorSize: TabBarIndicatorSize.tab,
+        onTap: (no){
+          setState(() {
+            selectedCategory= headers[no].id;
+          });
+        },
+        indicator: BubbleTabIndicator(
+          indicatorHeight: 25.0,
+          indicatorColor: Color(AppColors.commonOrange),
+          tabBarIndicatorSize: TabBarIndicatorSize.tab,
+        ),
+        tabs: tabs,),
+    );
+  }
+
+  Widget _tabProducts() {
     return Container(
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 15.0),
-            child: Container(
-              width: double.infinity,
-              decoration: BoxDecoration(
-                  color: Color(AppColors.homeboxGrey),
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(10),
-                    topRight: Radius.circular(10),
-                  )),
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 12.0),
-                    child: new TabBar(
-                        isScrollable: true,
-                        unselectedLabelColor: Colors.grey,
-                        labelColor: Colors.white,
-                        indicatorSize: TabBarIndicatorSize.tab,
-                        indicator: new BubbleTabIndicator(
-                          indicatorHeight: 25.0,
-                          indicatorColor: Colors.amber,
-                          tabBarIndicatorSize: TabBarIndicatorSize.tab,
-                          // Other flags
-                          // indicatorRadius: 1,
-                          // insets: EdgeInsets.all(1),
-                          // padding: EdgeInsets.all(10)
+      height: screenHeight(context, mulBy: 0.62),
+      width: screenWidth(context),
+      child: FutureBuilder(
+        future: getCategoryProducts(selectedCategory),
+        builder: (context, AsyncSnapshot snapshot) {
+          if (snapshot.hasData) {
+            return GridView.builder(
+              physics: const ScrollPhysics(),
+              shrinkWrap: true,
+              scrollDirection: Axis.horizontal,
+              itemCount: snapshot.data!.length,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  childAspectRatio: 1.1,
+                  crossAxisCount:  2 ),
+              itemBuilder: (context, index) {
+                return InkWell(
+                  onTap: () {
+                  },
+                  child: Card(
+                    color: Colors.transparent,
+                    shadowColor: Colors.transparent,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Stack(
+                      alignment: Alignment.bottomCenter,
+                      children: [
+                        Image.asset(
+                          'images/recomended_img.png',
+                          height: screenHeight(context, mulBy: 0.3),
+                          fit: BoxFit.fill,
                         ),
-                        tabs: tabs,
-                        controller: _tabController),
+                        Container(
+                          height: screenHeight(context, mulBy: 0.15),
+                          alignment: Alignment.bottomCenter,
+                          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                                begin: Alignment.bottomCenter,
+                                end: Alignment.topCenter,
+                                colors: [Colors.black, Colors.transparent]),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Row(
+                                children: [
+                                  Text("Rs. ${snapshot.data[index].rentPrice.toString().split(".")[0]}",style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16),),
+                                  Text(' / Rental',style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 13),),
+                                ],
+                              ),
+
+                              Row(
+                                children: [
+                                  Text("Rs. ${snapshot.data[index].salePrice.toString().split(".")[0]}",style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16),),
+                                  Text(' / Sale',style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 13),),
+                                ],
+                              ),
+
+                              Text(
+                                snapshot.data[index].name,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                softWrap: false,
+                                style: TextStyle(color: Colors.white60, fontSize: 12.0),
+                              ),
+
+                            ],
+                          ),
+                        ),
+
+                      ],
+                    ),
                   ),
-                ],
-              ),
-            ),
-          ),
-        ],
+                );
+              },
+            );
+          }
+          return SizedBox(
+              height: screenHeight(context, mulBy: 0.3),
+              child: Center(child: CircularProgressIndicator(
+                color: Color(AppColors.commonOrange),
+              )));
+        },
       ),
     );
   }
@@ -203,21 +342,6 @@ class _HomePageState extends State<HomePage>
           child: setHomeBanner(index),
         );
       }),
-    );
-  }
-  Widget _banner() {
-    return Container(
-      margin: EdgeInsets.all(1),
-      width: double.infinity,
-      height:160,
-      child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          itemCount: homeArray.length,
-          itemBuilder: (BuildContext context, int index) {
-            return Container(
-              child: setMiddleBanner(index),
-            );
-          }),
     );
   }
 
@@ -281,66 +405,6 @@ class _HomePageState extends State<HomePage>
 
     );
   }
-  Widget setMiddleBanner(int index) {
-    return Container(
-      width: 390,
-      height: 160,
-      child: Card(
-        semanticContainer: true,
-        clipBehavior: Clip.antiAliasWithSaveLayer,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        elevation: 5,
-        margin: EdgeInsets.all(10),
-        child: Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage("images/banner1.jpg"),
-              fit: BoxFit.fill,
-              alignment: Alignment.center,
-            ),
-          ),
-          /*child: Row(
-            children: [
-              Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8.0,left: 10),
-                    child: SizedBox(
-                      width: 185.0,
-                      child: Text(
-                        "Zardozi And Thread Embroidery Imported Green Sherwani",
-                        maxLines: 4,
-                        overflow: TextOverflow.ellipsis,
-                        softWrap: false,
-                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 19.0),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20.0),
-                    child: Row(
-                      children: [
-                        Text('Shop Now',
-                            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 12.0),
-                          child: Icon(CupertinoIcons.arrow_right,color: Colors.white,),
-                        )
-                      ],
-                    ),
-                  )
-                ],
-              ),
-              Image(image: AssetImage('images/sher_img.png'))
-            ],
-          ),*/
-        ),
-      ),
-
-    );
-  }
 
   Widget _setFeaturedProduct() {
     return Container(
@@ -366,21 +430,7 @@ class _HomePageState extends State<HomePage>
                 child:
                 Padding(
                   padding: const EdgeInsets.only(left: 13.0,right: 13.0,top: 10.0),
-                  child: ListView.builder(
-                    // make sure to add the following lines:
-                    scrollDirection: Axis.horizontal,
-                    shrinkWrap: true,
-                    physics: ScrollPhysics(),
-                      itemCount: homeArray.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return InkWell(
-                          child: Container(
-                            child: _featureListData(index),
-                          ),
-                        );
-                      }
-                    // the rest of your list view code
-                  ),
+                  child: _featureListData(),
                 ) // ListView
             )
 
@@ -391,10 +441,15 @@ class _HomePageState extends State<HomePage>
     );
   }
 
-  Widget _featureListData(int index) {
-    return Padding(
-      padding: const EdgeInsets.only(right: 8.0),
-      child: Container(
+  Widget _featureListData() {
+    return ListView.builder(
+      itemCount: featuredProducts.length,
+        scrollDirection: Axis.horizontal,
+        shrinkWrap: true,
+        physics: ScrollPhysics(),
+        itemBuilder: (BuildContext context, int index){
+      return Container(
+        margin: EdgeInsets.only(right: screenWidth(context, mulBy: 0.03)),
         width: 155,
         height: 248,
         child: Column(
@@ -409,16 +464,13 @@ class _HomePageState extends State<HomePage>
               padding: const EdgeInsets.only(top: 8.0),
               child: Row(
                 children: [
-                  Text('Rs 2,999',style: TextStyle(
+                  Text("Rs. ${featuredProducts[index].rentPrice.toString().split(".")[0]}",style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
                       fontSize: 16),),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 4.0),
-                    child: Text('/ Rental',style: TextStyle(
+                  Text(' / Rental',style: TextStyle(
                       color: Colors.grey,
-                        fontSize: 13),),
-                  ),
+                      fontSize: 13),),
                 ],
               ),
             ),
@@ -427,16 +479,13 @@ class _HomePageState extends State<HomePage>
               padding: const EdgeInsets.only(top: 3.0),
               child: Row(
                 children: [
-                  Text('Rs 28,999',style: TextStyle(
+                  Text("Rs. ${featuredProducts[index].rentPrice.toString().split(".")[0]}",style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
                       fontSize: 16),),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 4.0),
-                    child: Text('/ Sale',style: TextStyle(
+                  Text(' / Sale',style: TextStyle(
                       color: Colors.grey,
-                        fontSize: 13),),
-                  ),
+                      fontSize: 13),),
                 ],
               ),
             ),
@@ -446,8 +495,8 @@ class _HomePageState extends State<HomePage>
               child: SizedBox(
                 width: 185.0,
                 child: Text(
-                  "Embroidered Pista Green Sherwani",
-                  maxLines: 4,
+                  featuredProducts[index].name,
+                  maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   softWrap: false,
                   style: TextStyle(color: Colors.black87, fontSize: 12.0),
@@ -457,8 +506,8 @@ class _HomePageState extends State<HomePage>
 
           ],
         ),
-      ),
-    );
+      );
+    });
   }
 
   Widget _setRecommendedList() {
@@ -489,19 +538,7 @@ class _HomePageState extends State<HomePage>
               child:
               Padding(
                 padding: const EdgeInsets.only(left: 13.0,right: 13.0,top: 10.0),
-                child: ListView.builder(
-                  // make sure to add the following lines:
-                    scrollDirection: Axis.horizontal,
-                    shrinkWrap: true,
-                    physics: ScrollPhysics(),
-                    itemCount: homeArray.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Container(
-                        child: _recommendedListData(index),
-                      );
-                    }
-                  // the rest of your list view code
-                ),
+                child: _recommendedListData(),
               ) // ListView
           )
 
@@ -510,73 +547,73 @@ class _HomePageState extends State<HomePage>
     );
   }
 
-  Widget _recommendedListData(int index) {
-    return Padding(
-      padding: const EdgeInsets.only(right: 8.0),
-      child: Container(
-        width: 155,
-        height: 248,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Image(
-              image: AssetImage('images/recomended_img.png'),
-              width: 155,
-              height: 173,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: Row(
-                children: [
-                  Text('Rs 2,999',style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16),),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 4.0),
-                    child: Text('/ Rental',style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 13),),
-                  ),
-                ],
-              ),
-            ),
-
-            Padding(
-              padding: const EdgeInsets.only(top: 3.0),
-              child: Row(
-                children: [
-                  Text('Rs 28,999',style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16),),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 4.0),
-                    child: Text('/ Sale',style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 13),),
-                  ),
-                ],
-              ),
-            ),
-
-            Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: SizedBox(
-                width: 185.0,
-                child: Text(
-                  "Embroidered Pista Green Sherwani",
-                  maxLines: 4,
-                  overflow: TextOverflow.ellipsis,
-                  softWrap: false,
-                  style: TextStyle(color: Colors.black87, fontSize: 12.0),
+  Widget _recommendedListData() {
+    return ListView.builder(
+        itemCount: recommendedProducts.length,
+        scrollDirection: Axis.horizontal,
+        shrinkWrap: true,
+        physics: ScrollPhysics(),
+        itemBuilder: (BuildContext context, int index){
+          return Container(
+            margin: EdgeInsets.only(right: screenWidth(context, mulBy: 0.03)),
+            width: 155,
+            height: 248,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Image(
+                  image: AssetImage('images/recomended_img.png'),
+                  width: 155,
+                  height: 173,
                 ),
-              ),
-            ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Row(
+                    children: [
+                      Text("Rs. ${recommendedProducts[index].rentPrice.toString().split(".")[0]}",style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16),),
+                      Text(' / Rental',style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 13),),
+                    ],
+                  ),
+                ),
 
-          ],
-        ),
-      ),
-    );
+                Padding(
+                  padding: const EdgeInsets.only(top: 3.0),
+                  child: Row(
+                    children: [
+                      Text("Rs. ${recommendedProducts[index].rentPrice.toString().split(".")[0]}",style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16),),
+                      Text(' / Sale',style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 13),),
+                    ],
+                  ),
+                ),
+
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: SizedBox(
+                    width: 185.0,
+                    child: Text(
+                      recommendedProducts[index].name,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      softWrap: false,
+                      style: TextStyle(color: Colors.black87, fontSize: 12.0),
+                    ),
+                  ),
+                ),
+
+              ],
+            ),
+          );
+        });
   }
 }
+
