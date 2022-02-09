@@ -373,8 +373,10 @@ class _HomePageState extends State<HomePage>
                     physics: ScrollPhysics(),
                       itemCount: homeArray.length,
                       itemBuilder: (BuildContext context, int index) {
-                        return Container(
-                          child: _featureListData(index),
+                        return InkWell(
+                          child: Container(
+                            child: _featureListData(index),
+                          ),
                         );
                       }
                     // the rest of your list view code
