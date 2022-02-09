@@ -24,6 +24,8 @@ dependencies:
 
   persistent_bottom_nav_bar: any
   bubble_tab_indicator: "^0.1.5"
+  shared_preferences: ^2.0.8
+  http: ^0.13.3
 
   flutter:
     sdk: flutter
