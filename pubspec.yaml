@@ -26,6 +26,7 @@ dependencies:
   bubble_tab_indicator: "^0.1.5"
   shared_preferences: ^2.0.8
   http: ^0.13.3
+  carousel_slider: ^4.0.0
 
   flutter:
     sdk: flutter
