@@ -3,11 +3,12 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
 import 'package:flutter/rendering.dart';
-import 'package:poshrob/Resources/AppColors.dart';
-import 'package:poshrob/accounts/LoginPage.dart';
-import 'package:poshrob/backend/backend_class.dart';
-import 'package:poshrob/backend/backend_data.dart';
-import 'package:poshrob/shared_pref.dart';
+import 'package:flutter_app1/product_detail.dart';
+import '../Resources/AppColors.dart';
+import '../accounts/LoginPage.dart';
+import '../backend/backend_class.dart';
+import '../backend/backend_data.dart';
+import '../shared_pref.dart';
 
 import '../sizes.dart';
 
@@ -246,6 +247,7 @@ class _HomePageState extends State<HomePage>
               itemBuilder: (context, index) {
                 return InkWell(
                   onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProductDetailsPage()));
                   },
                   child: Card(
                     color: Colors.transparent,
