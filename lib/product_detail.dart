@@ -1,399 +1,414 @@
 import 'package:flutter/material.dart';
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter_app1/Resources/AppColors.dart';
 import 'package:flutter_app1/model/data.dart';
+import 'package:flutter_app1/sizes.dart';
 import 'package:flutter_app1/themes/light_color.dart';
 import 'package:flutter_app1/themes/theme.dart';
 import 'package:flutter_app1/title_text.dart';
 import 'package:flutter_app1/extentions.dart';
 
-class ProductDetailPage extends StatefulWidget {
-  ProductDetailPage({Key? key}) : super(key: key);
+class ProductDetailsPage extends StatefulWidget {
+  const ProductDetailsPage({Key? key}) : super(key: key);
 
   @override
-  _ProductDetailPageState createState() => _ProductDetailPageState();
+  _ProductDetailsPageState createState() => _ProductDetailsPageState();
 }
 
-class _ProductDetailPageState extends State<ProductDetailPage>
-    with TickerProviderStateMixin {
-  late AnimationController controller;
-  late Animation<double> animation;
+class _ProductDetailsPageState extends State<ProductDetailsPage> with TickerProviderStateMixin{
+
+  final List<String> imgList = [
+    'https://poshrobe.com/image/product/LARGE/Mens-Sherwani-In-Black-Sssh1044Bla40-n01.jpg',
+    'https://poshrobe.com/image/product/LARGE/Mens-Sherwani-In-Black-Sssh1044Bla40-n03.jpg',
+    'https://poshrobe.com/image/product/LARGE/Mens-Sherwani-In-Black-Sssh1044Bla40-n06.jpg',
+    'https://poshrobe.com/image/product/LARGE/Mens-Sherwani-In-Black-Sssh1044Bla40-n04.jpg',
+    'https://poshrobe.com/image/product/LARGE/Mens-Sherwani-In-Black-Sssh1044Bla40-n05.jpg'
+  ];
+
+  final CarouselController _controller = CarouselController();
+  bool rent= true;
+  late TabController controller;
+
   @override
   void initState() {
+    controller= TabController(length: 3, vsync: this,);
     super.initState();
-    controller =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 300));
-    animation = Tween<double>(begin: 0, end: 1).animate(
-        CurvedAnimation(parent: controller, curve: Curves.easeInToLinear));
-    controller.forward();
-  }
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
-
-  bool isLiked = true;
-  Widget _appBar() {
-    return Container(
-      padding: AppTheme.padding,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          _icon(
-            Icons.arrow_back_ios,
-            color: Colors.black54,
-            size: 15,
-            padding: 12,
-            isOutLine: true,
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-          _icon(isLiked ? Icons.favorite : Icons.favorite_border,
-              color: isLiked ? LightColor.red : LightColor.lightGrey,
-              size: 15,
-              padding: 12,
-              isOutLine: false, onPressed: () {
-            setState(() {
-              isLiked = !isLiked;
-            });
-          }),
-        ],
-      ),
-    );
-  }
-
-  Widget _icon(
-    IconData icon, {
-    Color color = LightColor.iconColor,
-    double size = 20,
-    double padding = 10,
-    bool isOutLine = false,
-    Function? onPressed,
-  }) {
-    return Container(
-      height: 40,
-      width: 40,
-      padding: EdgeInsets.all(padding),
-      // margin: EdgeInsets.all(padding),
-      decoration: BoxDecoration(
-        border: Border.all(
-            color: LightColor.iconColor,
-            style: isOutLine ? BorderStyle.solid : BorderStyle.none),
-        borderRadius: BorderRadius.all(Radius.circular(13)),
-        color:
-            isOutLine ? Colors.transparent : Theme.of(context).backgroundColor,
-        boxShadow: <BoxShadow>[
-          BoxShadow(
-              color: Color(0xfff8f8f8),
-              blurRadius: 5,
-              spreadRadius: 10,
-              offset: Offset(5, 5)),
-        ],
-      ),
-      child: Icon(icon, color: color, size: size),
-    ).ripple(() {
-      if (onPressed != null) {
-        onPressed();
-      }
-    }, borderRadius: BorderRadius.all(Radius.circular(13)));
-  }
-
-  Widget _productImage() {
-    return AnimatedBuilder(
-      builder: (context, child) {
-        return AnimatedOpacity(
-          duration: Duration(milliseconds: 500),
-          opacity: animation.value,
-          child: child,
-        );
-      },
-      animation: animation,
-      child: Stack(
-        alignment: Alignment.bottomCenter,
-        children: <Widget>[
-          TitleText(
-            text: "AIP",
-            fontSize: 160,
-            color: LightColor.lightGrey,
-          ),
-          Image.asset('assets/show_1.png')
-        ],
-      ),
-    );
-  }
-
-  Widget _categoryWidget() {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 0),
-      width: AppTheme.fullWidth(context),
-      height: 80,
-      child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children:
-              AppData.showThumbnailList.map((x) => _thumbnail(x)).toList()),
-    );
-  }
-
-  Widget _thumbnail(String image) {
-    return AnimatedBuilder(
-      animation: animation,
-      //  builder: null,
-      builder: (context, child) => AnimatedOpacity(
-        opacity: animation.value,
-        duration: Duration(milliseconds: 500),
-        child: child,
-      ),
-      child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 10),
-        child: Container(
-          height: 40,
-          width: 50,
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: LightColor.grey,
-            ),
-            borderRadius: BorderRadius.all(Radius.circular(13)),
-            // color: Theme.of(context).backgroundColor,
-          ),
-          child: Image.asset(image),
-        ).ripple(() {}, borderRadius: BorderRadius.all(Radius.circular(13))),
-      ),
-    );
-  }
-
-  Widget _detailWidget() {
-    return DraggableScrollableSheet(
-      maxChildSize: .8,
-      initialChildSize: .53,
-      minChildSize: .53,
-      builder: (context, scrollController) {
-        return Container(
-          padding: AppTheme.padding.copyWith(bottom: 0),
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(40),
-                topRight: Radius.circular(40),
-              ),
-              color: Colors.white),
-          child: SingleChildScrollView(
-            controller: scrollController,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.max,
-              children: <Widget>[
-                SizedBox(height: 5),
-                Container(
-                  alignment: Alignment.center,
-                  child: Container(
-                    width: 50,
-                    height: 5,
-                    decoration: BoxDecoration(
-                        color: LightColor.iconColor,
-                        borderRadius: BorderRadius.all(Radius.circular(10))),
-                  ),
-                ),
-                SizedBox(height: 10),
-                Container(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      TitleText(text: "NIKE AIR MAX 200", fontSize: 25),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: <Widget>[
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              TitleText(
-                                text: "\$ ",
-                                fontSize: 18,
-                                color: LightColor.red,
-                              ),
-                              TitleText(
-                                text: "240",
-                                fontSize: 25,
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: <Widget>[
-                              Icon(Icons.star,
-                                  color: LightColor.yellowColor, size: 17),
-                              Icon(Icons.star,
-                                  color: LightColor.yellowColor, size: 17),
-                              Icon(Icons.star,
-                                  color: LightColor.yellowColor, size: 17),
-                              Icon(Icons.star,
-                                  color: LightColor.yellowColor, size: 17),
-                              Icon(Icons.star_border, size: 17),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                _availableSize(),
-                SizedBox(
-                  height: 20,
-                ),
-                _availableColor(),
-                SizedBox(
-                  height: 20,
-                ),
-                _description(),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _availableSize() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        TitleText(
-          text: "Available Size",
-          fontSize: 14,
-        ),
-        SizedBox(height: 20),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            _sizeWidget("US 6"),
-            _sizeWidget("US 7", isSelected: true),
-            _sizeWidget("US 8"),
-            _sizeWidget("US 9"),
-          ],
-        )
-      ],
-    );
-  }
-
-  Widget _sizeWidget(String text, {bool isSelected = false}) {
-    return Container(
-      padding: EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        border: Border.all(
-            color: LightColor.iconColor,
-            style: !isSelected ? BorderStyle.solid : BorderStyle.none),
-        borderRadius: BorderRadius.all(Radius.circular(13)),
-        color:
-            isSelected ? LightColor.orange : Theme.of(context).backgroundColor,
-      ),
-      child: TitleText(
-        text: text,
-        fontSize: 16,
-        color: isSelected ? LightColor.background : LightColor.titleTextColor,
-      ),
-    ).ripple(() {}, borderRadius: BorderRadius.all(Radius.circular(13)));
-  }
-
-  Widget _availableColor() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        TitleText(
-          text: "Available Size",
-          fontSize: 14,
-        ),
-        SizedBox(height: 20),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            _colorWidget(LightColor.yellowColor, isSelected: true),
-            SizedBox(
-              width: 30,
-            ),
-            _colorWidget(LightColor.lightBlue),
-            SizedBox(
-              width: 30,
-            ),
-            _colorWidget(LightColor.black),
-            SizedBox(
-              width: 30,
-            ),
-            _colorWidget(LightColor.red),
-            SizedBox(
-              width: 30,
-            ),
-            _colorWidget(LightColor.skyBlue),
-          ],
-        )
-      ],
-    );
-  }
-
-  Widget _colorWidget(Color color, {bool isSelected = false}) {
-    return CircleAvatar(
-      radius: 12,
-      backgroundColor: color.withAlpha(150),
-      child: isSelected
-          ? Icon(
-              Icons.check_circle,
-              color: color,
-              size: 18,
-            )
-          : CircleAvatar(radius: 7, backgroundColor: color),
-    );
-  }
-
-  Widget _description() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        TitleText(
-          text: "Available Size",
-          fontSize: 14,
-        ),
-        SizedBox(height: 20),
-        Text(AppData.description),
-      ],
-    );
-  }
-
-  FloatingActionButton _flotingButton() {
-    return FloatingActionButton(
-      onPressed: () {},
-      backgroundColor: LightColor.orange,
-      child: Icon(Icons.shopping_basket,
-          color: Theme.of(context).floatingActionButtonTheme.backgroundColor),
-    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: _flotingButton(),
-      body: SafeArea(
+      appBar: AppBar(
+        title: Image.asset("images/app_logo.png"),
+        elevation: 0,
+        backgroundColor: Colors.white,
+        automaticallyImplyLeading: false,
+      ),
+      body: SingleChildScrollView(
         child: Container(
-          decoration: BoxDecoration(
-              gradient: LinearGradient(
-            colors: [
-              Color(0xfffbfbfb),
-              Color(0xfff7f7f7),
-            ],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          )),
-          child: Stack(
+          padding: EdgeInsets.symmetric(horizontal: screenWidth(context, mulBy: 0.02), ),
+          child: Column(
             children: <Widget>[
-              Column(
+              CarouselSlider(
+                items: imgList.map((item) => Container(
+                  child: Container(
+                    margin: EdgeInsets.all(5.0),
+                    child: ClipRRect(
+                        borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                        child: Image.network(item, fit: BoxFit.fitHeight, height: screenHeight(context, mulBy: 0.4),)),
+                  ),
+                ))
+                    .toList(),
+                options: CarouselOptions(enlargeCenterPage: true, height: screenHeight(context, mulBy: 0.35), ),
+                carouselController: _controller,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  _appBar(),
-                  _productImage(),
-                  _categoryWidget(),
+                  ...Iterable<int>.generate(imgList.length).map(
+                        (int pageIndex) => Flexible(
+                      child: InkWell(
+                        onTap: () => _controller.animateToPage(pageIndex),
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: screenWidth(context, mulBy: 0.015),
+                            vertical: screenHeight(context, mulBy: 0.005)
+                          ),
+                          width: screenWidth(context,)/imgList.length,
+                          height: screenWidth(context,)/imgList.length,
+                          child: Image.network(imgList[pageIndex], fit: BoxFit.fitHeight,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
-              _detailWidget()
+              SizedBox(
+                height: screenHeight(context, mulBy: 0.02),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  InkWell(
+                    onTap: (){
+                      setState(() {
+                        rent=true;
+                      });
+                    },
+                    child: Container(
+                      width: screenWidth(context, mulBy: 0.4),
+                      height: screenHeight(context, mulBy: 0.13),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: rent?Colors.grey.withOpacity(0.5):Colors.white,
+                        border: Border.all(
+                          color: rent?Colors.transparent:Colors.grey.withOpacity(0.5),
+                            width: 1.5
+                        )
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                              "For Rental",
+                            style: TextStyle(
+                              fontSize: 16,
+
+                            ),
+                          ),
+                          Text(
+                              "Rs 2,499.00",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold
+                            ),
+                          ),
+                          Text(
+                              "per event",
+                            style: TextStyle(
+                              fontSize: 16,
+
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: (){
+                      setState(() {
+                        rent=false;
+                      });
+                    },
+                    child: Container(
+                      width: screenWidth(context, mulBy: 0.4),
+                      height: screenHeight(context, mulBy: 0.13),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: !rent?Colors.grey.withOpacity(0.5):Colors.white,
+                          border: Border.all(
+                              color: !rent?Colors.transparent:Colors.grey.withOpacity(0.5),
+                            width: 1.5
+                          )
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            "For Buying",
+                            style: TextStyle(
+                              fontSize: 16,
+
+                            ),
+                          ),
+                          Text(
+                            "Rs 18,000.00",
+                            style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold
+                            ),
+                          ),
+                          Text(
+                            "per event",
+                            style: TextStyle(
+                              fontSize: 16,
+
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                ],
+              ),
+              SizedBox(
+                height: screenHeight(context, mulBy: 0.015),
+              ),
+              rent?
+              Container(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Rent the product for 3 Days.",
+                      style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Rental Security: Rs 3000",
+                          style: TextStyle(
+                              fontSize: 15,
+                          ),
+                        ),
+                        Text(
+                          "Brand: Indian Dynasty",
+                          style: TextStyle(
+                            fontSize: 15,
+                          ),
+                        ),
+
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Condition: Used(Like new)",
+                          style: TextStyle(
+                            fontSize: 15,
+                          ),
+                        ),
+                        Text(
+                          "SKU: SSSH1045BL",
+                          style: TextStyle(
+                            fontSize: 15,
+                          ),
+                        ),
+
+                      ],
+                    ),
+                    SizedBox(
+                      height: screenHeight(context, mulBy: 0.015),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Size: ",
+                          style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold
+                          ),
+                        ),
+                        Container(
+                          width: screenWidth(context, mulBy: 0.27),
+                          height: screenHeight(context, mulBy: 0.05),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.grey.withOpacity(0.2),
+                          ),
+                        ),
+                        SizedBox(
+                          width: screenWidth(context, mulBy: 0.05),
+                        ),
+                        Text(
+                          "Quantity: ",
+                          style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold
+                          ),
+                        ),
+                        Container(
+                          width: screenWidth(context, mulBy: 0.27),
+                          height: screenHeight(context, mulBy: 0.05),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.grey.withOpacity(0.2),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: screenHeight(context, mulBy: 0.015),
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          "Pin: ",
+                          style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold
+                          ),
+                        ),
+                        Container(
+                          width: screenWidth(context, mulBy: 0.27),
+                          height: screenHeight(context, mulBy: 0.05),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.grey.withOpacity(0.2),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: screenHeight(context, mulBy: 0.015),
+                    ),
+                    Text(
+                      "Expected Delivery Date: 05-03-2022",
+                      style: TextStyle(
+                          fontSize: 15,
+                      ),
+                    ),
+                    Text(
+                      "Expected Return Date: 09-03-2022",
+                      style: TextStyle(
+                        fontSize: 15,
+                      ),
+                    ),
+                    Text(
+                      "Rental Price: Rs 2,499.00 + Rental Security: Rs 3,000.00",
+                      style: TextStyle(
+                        fontSize: 15,
+                      ),
+                    ),
+                    Text(
+                      "Total Payable Amount: Rs 5,499.00 (Taxes included)",
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold
+                      ),
+                    ),
+                    Center(
+                      child: Container(
+
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(50),
+                          color: Color(AppColors.commonOrange)
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          vertical: screenHeight(context, mulBy: 0.02),
+                          horizontal: screenWidth(context, mulBy: 0.04)
+                        ),
+                        child: Text("Add to Cart", style: TextStyle(color: Colors.white, fontSize: 25, fontWeight: FontWeight.bold),),
+                      ),
+                    ),
+                    SizedBox(
+                      height: screenHeight(context, mulBy: 0.015),
+                    ),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(15),
+                      child: Column(
+                        children: [
+                          TabBar(
+                            labelColor: Colors.white,
+                            unselectedLabelColor: Colors.black,
+                            controller: controller,
+
+                            indicator: const BoxDecoration(
+                              color: Colors.grey,
+                            ),
+                            tabs: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(50),
+                                child: Tab(
+
+                                  text: 'Description',
+                                  height: screenHeight(context, mulBy: 0.07),
+
+                                ),
+                              ),
+                              Tab(
+                                text: 'Specifications',
+                                height: screenHeight(context, mulBy: 0.07),
+
+                              ),
+                              Tab(
+                                height: screenHeight(context, mulBy: 0.07),
+                                text: 'Shipping & Policies',
+                              ),
+                            ],
+                          ),
+                          Container(
+                            height: screenHeight(context, mulBy: .3),
+                            padding: EdgeInsets.only(
+                                left: screenWidth(context,mulBy: 0.03),
+                                right: screenWidth(context,mulBy: 0.03),
+                                top: screenHeight(context, mulBy: 0.02)
+                            ),
+                            child: TabBarView(
+                              physics: const BouncingScrollPhysics(),
+                              controller: controller,
+                              children: <Widget>[
+                                SingleChildScrollView(
+                                  child: Text("This exemplary black Sherwani is designed in a way to give your looks a polished traditional look. The fancy metal buttons upfront go well with the imported fabric. Rest assured, when you wear this Sherwani, there are more than ever chances of people approaching you and asking about the website you've bought it from. Moreover, to add sparkle to the outfit the sherwani is accompanied by a churidar."),
+                                ),
+                                SingleChildScrollView(
+                                  child: Text("This exemplary black Sherwani is designed in a way to give your looks a polished traditional look. The fancy metal buttons upfront go well with the imported fabric. Rest assured, when you wear this Sherwani, there are more than ever chances of people approaching you and asking about the website you've bought it from. Moreover, to add sparkle to the outfit the sherwani is accompanied by a churidar."),
+                                ),
+                                SingleChildScrollView(
+                                  child: Text("This exemplary black Sherwani is designed in a way to give your looks a polished traditional look. The fancy metal buttons upfront go well with the imported fabric. Rest assured, when you wear this Sherwani, there are more than ever chances of people approaching you and asking about the website you've bought it from. Moreover, to add sparkle to the outfit the sherwani is accompanied by a churidar."),
+                                )
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: screenHeight(context, mulBy: 0.015),
+                    ),
+                  ],
+                ),
+              ):
+              Container(),
             ],
           ),
         ),
@@ -401,3 +416,4 @@ class _ProductDetailPageState extends State<ProductDetailPage>
     );
   }
 }
+
