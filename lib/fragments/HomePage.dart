@@ -130,11 +130,12 @@ class _HomePageState extends State<HomePage>
                       shrinkWrap: true,
                       physics: ScrollPhysics(),
                       children: <Widget>[
-                        //_topbar(),
+                        _topbar(),
                         _tabLayouts(),
                         _tabProducts(),
                         _categoryWidget(),
                         _setFeaturedProduct(),
+                        _banner(),
                         _setRecommendedList()
                       ],
                     )
@@ -230,7 +231,7 @@ class _HomePageState extends State<HomePage>
 
   Widget _tabProducts() {
     return Container(
-      height: screenHeight(context, mulBy: 0.62),
+      height: screenHeight(context, mulBy: 0.9),
       width: screenWidth(context),
       child: FutureBuilder(
         future: getCategoryProducts(selectedCategory),
@@ -242,80 +243,121 @@ class _HomePageState extends State<HomePage>
               scrollDirection: Axis.horizontal,
               itemCount: snapshot.data!.length,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  childAspectRatio: 1.1,
+                  childAspectRatio: 1.5,
                   crossAxisCount:  2 ),
               itemBuilder: (context, index) {
                 return InkWell(
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProductDetailsPage()));
                   },
-                  child: Card(
-                    color: Colors.transparent,
-                    shadowColor: Colors.transparent,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Stack(
-                      alignment: Alignment.bottomCenter,
-                      children: [
-                        Image.asset(
-                          'images/recomended_img.png',
-                          height: screenHeight(context, mulBy: 0.3),
-                          fit: BoxFit.fill,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Image.asset(
+                        'images/recomended_img.png',
+                        height: screenHeight(context, mulBy: 0.27),
+                        fit: BoxFit.fill,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Row(
+                          children: [
+                            Text("Rs. ${snapshot.data[index].rentPrice.toString().split(".")[0]}",style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16),),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 4.0),
+                              child: Text('/ Rental',style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 13),),
+                            ),
+                          ],
                         ),
-                        Container(
-                          height: screenHeight(context, mulBy: 0.15),
-                          alignment: Alignment.bottomCenter,
-                          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                                begin: Alignment.bottomCenter,
-                                end: Alignment.topCenter,
-                                colors: [Colors.black, Colors.transparent]),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Row(
-                                children: [
-                                  Text("Rs. ${snapshot.data[index].rentPrice.toString().split(".")[0]}",style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16),),
-                                  Text(' / Rental',style: TextStyle(
-                                      color: Colors.grey,
-                                      fontSize: 13),),
-                                ],
-                              ),
+                      ),
 
-                              Row(
-                                children: [
-                                  Text("Rs. ${snapshot.data[index].salePrice.toString().split(".")[0]}",style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16),),
-                                  Text(' / Sale',style: TextStyle(
-                                      color: Colors.grey,
-                                      fontSize: 13),),
-                                ],
-                              ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 3.0),
+                        child: Row(
+                          children: [
+                            Text("Rs. ${snapshot.data[index].salePrice.toString().split(".")[0]}",style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16),),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 4.0),
+                              child: Text('/ Sale',style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 13),),
+                            ),
+                          ],
+                        ),
+                      ),
 
-                              Text(
-                                snapshot.data[index].name,
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                                softWrap: false,
-                                style: TextStyle(color: Colors.white60, fontSize: 12.0),
-                              ),
-
-                            ],
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: SizedBox(
+                          width: 185.0,
+                          child: Text(
+                            snapshot.data[index].name,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            softWrap: false,
+                            style: TextStyle(color: Colors.black87, fontSize: 12.0),
                           ),
                         ),
-
-                      ],
-                    ),
+                      ),
+                      // Container(
+                      //   height: screenHeight(context, mulBy: 0.15),
+                      //   alignment: Alignment.bottomCenter,
+                      //   padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                      //   decoration: BoxDecoration(
+                      //     gradient: LinearGradient(
+                      //         begin: Alignment.bottomCenter,
+                      //         end: Alignment.topCenter,
+                      //         colors: [Colors.black, Colors.transparent]),
+                      //     borderRadius: BorderRadius.circular(10),
+                      //   ),
+                      //   child: Column(
+                      //     crossAxisAlignment: CrossAxisAlignment.start,
+                      //     mainAxisSize: MainAxisSize.min,
+                      //     children: [
+                      //       Row(
+                      //         children: [
+                      //           Text("Rs. ${snapshot.data[index].rentPrice.toString().split(".")[0]}",style: TextStyle(
+                      //               color: Colors.white,
+                      //               fontWeight: FontWeight.bold,
+                      //               fontSize: 16),),
+                      //           Text(' / Rental',style: TextStyle(
+                      //               color: Colors.grey,
+                      //               fontSize: 13),),
+                      //         ],
+                      //       ),
+                      //
+                      //       Row(
+                      //         children: [
+                      //           Text("Rs. ${snapshot.data[index].salePrice.toString().split(".")[0]}",style: TextStyle(
+                      //               color: Colors.white,
+                      //               fontWeight: FontWeight.bold,
+                      //               fontSize: 16),),
+                      //           Text(' / Sale',style: TextStyle(
+                      //               color: Colors.grey,
+                      //               fontSize: 13),),
+                      //         ],
+                      //       ),
+                      //
+                      //       Text(
+                      //         snapshot.data[index].name,
+                      //         maxLines: 2,
+                      //         overflow: TextOverflow.ellipsis,
+                      //         softWrap: false,
+                      //         style: TextStyle(color: Colors.white60, fontSize: 12.0),
+                      //       ),
+                      //
+                      //     ],
+                      //   ),
+                      // ),
+                    ],
                   ),
                 );
               },
@@ -546,6 +588,83 @@ class _HomePageState extends State<HomePage>
 
         ]),
       ),
+    );
+  }
+
+  Widget _banner() {
+    return Container(
+      margin: EdgeInsets.all(1),
+      width: double.infinity,
+      height:160,
+      child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: homeArray.length,
+          itemBuilder: (BuildContext context, int index) {
+            return Container(
+              child: setMiddleBanner(index),
+            );
+          }),
+    );
+  }
+
+  Widget setMiddleBanner(int index) {
+    return Container(
+      width: 390,
+      height: 160,
+      child: Card(
+        semanticContainer: true,
+        clipBehavior: Clip.antiAliasWithSaveLayer,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        elevation: 5,
+        margin: EdgeInsets.all(10),
+        child: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("images/banner1.jpg"),
+              fit: BoxFit.fill,
+              alignment: Alignment.center,
+            ),
+          ),
+          /*child: Row(
+            children: [
+              Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8.0,left: 10),
+                    child: SizedBox(
+                      width: 185.0,
+                      child: Text(
+                        "Zardozi And Thread Embroidery Imported Green Sherwani",
+                        maxLines: 4,
+                        overflow: TextOverflow.ellipsis,
+                        softWrap: false,
+                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 19.0),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20.0),
+                    child: Row(
+                      children: [
+                        Text('Shop Now',
+                            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 12.0),
+                          child: Icon(CupertinoIcons.arrow_right,color: Colors.white,),
+                        )
+                      ],
+                    ),
+                  )
+                ],
+              ),
+              Image(image: AssetImage('images/sher_img.png'))
+            ],
+          ),*/
+        ),
+      ),
+
     );
   }
 

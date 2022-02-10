@@ -92,55 +92,51 @@ class _LoginPageState extends State<LoginPage> {
 
           Column(
             children: [
-              TextField(
-              controller: emailId,
-                decoration: InputDecoration(
-                  hintText: 'Enter Email Address',
-                  contentPadding: EdgeInsets.symmetric(
-                      vertical: 10.0, horizontal: 20.0),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                        color: Color(AppColors.grey), width: 1.0),
-                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                        color: Color(AppColors.commonOrange), width: 2.0),
-                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
+              Material(
+                shadowColor: Colors.black,
+                elevation: 8,
+                borderRadius: BorderRadius.all(Radius.circular(20)),
+                child: TextField(
+                controller: emailId,
+                  decoration: InputDecoration(
+                    hintText: 'Enter Email Address',
+                    border: InputBorder.none,
+                    contentPadding: EdgeInsets.symmetric(
+                        vertical: 10.0, horizontal: 20.0),
+                    // border: OutlineInputBorder(
+                    //   borderRadius: BorderRadius.all(Radius.circular(32.0)),
+                    // ),
+                    // enabledBorder: OutlineInputBorder(
+                    //   borderSide: BorderSide(
+                    //       color: Color(AppColors.grey), width: 1.0),
+                    //   borderRadius: BorderRadius.all(Radius.circular(32.0)),
+                    // ),
+                    // focusedBorder: OutlineInputBorder(
+                    //   borderSide: BorderSide(
+                    //       color: Color(AppColors.commonOrange), width: 2.0),
+                    //   borderRadius: BorderRadius.all(Radius.circular(32.0)),
+                    // ),
                   ),
                 ),
               ),
               SizedBox(height: screenHeight(context, mulBy: 0.015)),
-              TextField(
-                  controller: password,
-                  decoration: InputDecoration(
-                    hintText: 'Enter Password',
-                    contentPadding: EdgeInsets.symmetric(
-                        vertical: 10.0, horizontal: 20.0),
-                    border: OutlineInputBorder(
-                      borderRadius:
-                      BorderRadius.all(Radius.circular(32.0)),
+              Material(
+                shadowColor: Colors.black,
+                elevation: 8,
+                borderRadius: BorderRadius.all(Radius.circular(20)),
+                child: TextField(
+                    controller: password,
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: 'Enter Password',
+                      contentPadding: EdgeInsets.symmetric(
+                          vertical: 10.0, horizontal: 20.0),
                     ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                          color: Color(AppColors.grey), width: 1.0),
-                      borderRadius:
-                      BorderRadius.all(Radius.circular(32.0)),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                          color: Color(AppColors.commonOrange),
-                          width: 2.0),
-                      borderRadius:
-                      BorderRadius.all(Radius.circular(32.0)),
-                    ),
-                  ),
-                  keyboardType: TextInputType.visiblePassword,
-                  obscureText: true,
-                  obscuringCharacter: '*'),
+
+                    keyboardType: TextInputType.visiblePassword,
+                    obscureText: true,
+                    obscuringCharacter: '*'),
+              ),
               SizedBox(height: screenHeight(context, mulBy: 0.04)),
               ConstrainedBox(
                 constraints:
