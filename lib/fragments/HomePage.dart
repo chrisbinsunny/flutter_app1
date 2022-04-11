@@ -248,7 +248,9 @@ class _HomePageState extends State<HomePage>
               itemBuilder: (context, index) {
                 return InkWell(
                   onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProductDetailsPage()));
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProductDetailsPage(
+                      id: snapshot.data[index].id,
+                    )));
                   },
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
