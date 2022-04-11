@@ -3,6 +3,8 @@
 
 
 
+import 'package:flutter_app1/fragments/Sample.dart';
+
 class Header {
   final String name;
   final String id;
@@ -43,7 +45,7 @@ class Product {
     return Product(
       id: json['prod_id'].toString(),
       name: json['prod_name'].toString(),
-      rentPrice: json['prod_rental_price'].toString(),
+      rentPrice: json['prod_rental_price_used'].toString(),
       salePrice: json['prod_sale_price'].toString(),
     );
   }
@@ -98,7 +100,7 @@ class ProductInfo {
 
 class Attributes {
   final String name;
-  final List<Map<String, String>> attribute;
+  final List attribute;
 
   Attributes({
     required this.attribute,
@@ -106,9 +108,13 @@ class Attributes {
   });
 
   factory Attributes.fromJson(Map<String, dynamic> json){
-    print("lol");
+    // Iterable list = json['attribute'];
+    // print(list.toString());
+    // List attribute2 = list.map((i) =>
+    // i
+    // ).toList();
     return Attributes(
-      attribute: json['attribute'] as List<Map<String, String>>,
+      attribute: json['attribute'],
       name: json['name'].toString(),
     );
   }
