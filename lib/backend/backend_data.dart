@@ -59,6 +59,20 @@ Future<List<Product>> getFeaturedProducts() async {
   return products;
 }
 
+Future<ProductInfo> getDetailedProduct(String id) async {
+  final http.Response response = await http.get(
+    Uri.parse('https://poshrobe.com/products/product_view/$id'),
+  );
+  late ProductInfo productInfo;
+  if (response.statusCode == 200) {
+    var productInfoJson = json.decode(response.body)[0]['productInfo'];
+    productInfo = ProductInfo.fromJson(productInfoJson);
+  }
+  return productInfo;
+}
+
+
+
 Future<List<Product>> getRecommendedProducts() async {
   final http.Response response = await http.get(
     Uri.parse('https://poshrobe.com/home/homepage_recommended_products'),
