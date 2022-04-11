@@ -255,8 +255,8 @@ class _HomePageState extends State<HomePage>
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Image.asset(
-                        'images/recomended_img.png',
+                      Image.network(
+                        "https://poshrobe.com/image/product_image/${snapshot.data[index].id}/MEDIUM",
                         height: screenHeight(context, mulBy: 0.27),
                         fit: BoxFit.fill,
                       ),
@@ -501,10 +501,10 @@ class _HomePageState extends State<HomePage>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image(
-              image: AssetImage('images/feature_img.png'),
-              width: 155,
-              height: 173,
+            Image.network(
+              "https://poshrobe.com/image/product_image/${featuredProducts[index].id}/MEDIUM",
+              height: screenHeight(context, mulBy: 0.27),
+              fit: BoxFit.fill,
             ),
             Padding(
               padding: const EdgeInsets.only(top: 8.0),
@@ -684,10 +684,10 @@ class _HomePageState extends State<HomePage>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Image(
-                  image: AssetImage('images/recomended_img.png'),
-                  width: 155,
-                  height: 173,
+                Image.network(
+                  "https://poshrobe.com/image/product_image/${recommendedProducts[index].id}/MEDIUM",
+                  height: screenHeight(context, mulBy: 0.27),
+                  fit: BoxFit.fill,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 8.0),
