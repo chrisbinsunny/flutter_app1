@@ -44,16 +44,16 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> with TickerProv
         backgroundColor: Colors.white,
         automaticallyImplyLeading: false,
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: screenWidth(context, mulBy: 0.02), ),
-          child: FutureBuilder<ProductInfo>(
-            future: _future,
-              builder: (BuildContext context, AsyncSnapshot snapshot)
-              {
-            if(snapshot.hasData){
-              imgList=snapshot.data.images;
-              return Column(
+      body: Container(
+        padding: EdgeInsets.symmetric(horizontal: screenWidth(context, mulBy: 0.02), ),
+        child: FutureBuilder<ProductInfo>(
+          future: _future,
+            builder: (BuildContext context, AsyncSnapshot snapshot)
+            {
+          if(snapshot.hasData){
+            imgList=snapshot.data.images;
+            return SingleChildScrollView(
+              child: Column(
                 children: <Widget>[
                   CarouselSlider(
                     items: imgList.map((item) => Container(
@@ -206,7 +206,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> with TickerProv
                     ],
                   ),
                   SizedBox(
-                    height: screenHeight(context, mulBy: 0.015),
+                    height: screenHeight(context, mulBy: 0.02),
                   ),
                   rent?
                   Container(
@@ -216,9 +216,13 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> with TickerProv
                         Text(
                           "Rent the product for 3 Days.",
                           style: TextStyle(
-                              fontSize: 15,
+                              fontSize: 17,
                               fontWeight: FontWeight.bold
                           ),
+                        ),
+
+                        SizedBox(
+                          height: screenHeight(context, mulBy: 0.012),
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -416,11 +420,18 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> with TickerProv
                                       ),
                                     ),
                                     Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                       crossAxisAlignment: CrossAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
-                                        Text("name",
-                                    style: TextStyle(fontWeight: FontWeight.bold)),
+                                        Text(snapshot.data.attributes.name,
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16,
+                                              color: Colors.black),),
+
+                                        SizedBox(
+                                          width: screenWidth(context, mulBy: 0.04),
+                                        ),
                                         Expanded(
                                           child: ListView.builder(
                                               itemCount: 4,
@@ -428,12 +439,14 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> with TickerProv
                                               itemBuilder: (BuildContext context, i)
                                               => RichText(
                                                 text: TextSpan(
-                                                  text: 'name ',
-                                                  style: TextStyle(fontWeight: FontWeight.bold,
+                                                  text: '${snapshot.data.attributes.attribute[i]["name"]}: ',
+                                                  style: TextStyle(
+                                                      fontWeight: FontWeight.bold,
+                                                      fontSize: 15,
                                                       color: Colors.black),
                                                   children: <TextSpan>[
                                                     TextSpan(
-                                                        text: 'text',
+                                                        text: snapshot.data.attributes.attribute[i]["text"],
                                                         style: TextStyle(fontWeight: FontWeight.normal)),
                                                   ],
                                                 ),
@@ -456,16 +469,247 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> with TickerProv
                       ],
                     ),
                   ):
-                  Container(),
+                  Container(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Buy Brand New Product and keep it.",
+                          style: TextStyle(
+                              fontSize: 17,
+                              fontWeight: FontWeight.bold
+                          ),
+                        ),
+
+                        SizedBox(
+                          height: screenHeight(context, mulBy: 0.012),
+                        ),
+                        Text(
+                          "Brand: ${snapshot.data.brand}",
+                          style: TextStyle(
+                            fontSize: 15,
+                          ),
+                        ),
+                        Text(
+                          "Condition:  New (Never Used)",
+                          style: TextStyle(
+                            fontSize: 15,
+                          ),
+                        ),
+                        Text(
+                          "SKU: ${snapshot.data.sku}",
+                          style: TextStyle(
+                            fontSize: 15,
+                          ),
+                        ),
+                        SizedBox(
+                          height: screenHeight(context, mulBy: 0.015),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Size: ",
+                              style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold
+                              ),
+                            ),
+                            Container(
+                              width: screenWidth(context, mulBy: 0.27),
+                              height: screenHeight(context, mulBy: 0.05),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.grey.withOpacity(0.2),
+                              ),
+                            ),
+                            SizedBox(
+                              width: screenWidth(context, mulBy: 0.05),
+                            ),
+                            Text(
+                              "Quantity: ",
+                              style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold
+                              ),
+                            ),
+                            Container(
+                              width: screenWidth(context, mulBy: 0.27),
+                              height: screenHeight(context, mulBy: 0.05),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.grey.withOpacity(0.2),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: screenHeight(context, mulBy: 0.015),
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                              "Pin: ",
+                              style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold
+                              ),
+                            ),
+                            Container(
+                              width: screenWidth(context, mulBy: 0.27),
+                              height: screenHeight(context, mulBy: 0.05),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.grey.withOpacity(0.2),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: screenHeight(context, mulBy: 0.015),
+                        ),
+                        Text(
+                          "Expected Delivery Date: ??",
+                          style: TextStyle(
+                            fontSize: 15,
+                          ),
+                        ),
+                        Text(
+                          "Total Payable Amount: Rs ${snapshot.data.salePrice} (Taxes included)",
+                          style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold
+                          ),
+                        ),
+                        SizedBox(
+                          height: screenHeight(context, mulBy: 0.02),
+                        ),
+                        Center(
+                          child: Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(50),
+                                color: Color(AppColors.commonOrange)
+                            ),
+                            padding: EdgeInsets.symmetric(
+                                vertical: screenHeight(context, mulBy: 0.02),
+                                horizontal: screenWidth(context, mulBy: 0.04)
+                            ),
+                            child: Text("Add to Cart", style: TextStyle(color: Colors.white, fontSize: 25, fontWeight: FontWeight.bold),),
+                          ),
+                        ),
+                        SizedBox(
+                          height: screenHeight(context, mulBy: 0.015),
+                        ),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(15),
+                          child: Column(
+                            children: [
+                              TabBar(
+                                labelColor: Colors.white,
+                                unselectedLabelColor: Colors.black,
+                                controller: controller,
+
+                                indicator: const BoxDecoration(
+                                  color: Colors.grey,
+                                ),
+                                tabs: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(50),
+                                    child: Tab(
+
+                                      text: 'Description',
+                                      height: screenHeight(context, mulBy: 0.07),
+
+                                    ),
+                                  ),
+                                  Tab(
+                                    text: 'Specifications',
+                                    height: screenHeight(context, mulBy: 0.07),
+
+                                  ),
+                                  Tab(
+                                    height: screenHeight(context, mulBy: 0.07),
+                                    text: 'Shipping & Policies',
+                                  ),
+                                ],
+                              ),
+                              Container(
+                                height: screenHeight(context, mulBy: .3),
+                                padding: EdgeInsets.only(
+                                    left: screenWidth(context,mulBy: 0.03),
+                                    right: screenWidth(context,mulBy: 0.03),
+                                    top: screenHeight(context, mulBy: 0.02)
+                                ),
+                                child: TabBarView(
+                                  physics: const BouncingScrollPhysics(),
+                                  controller: controller,
+                                  children: <Widget>[
+                                    SingleChildScrollView(
+                                      child: Text(
+                                          snapshot.data.desc
+                                      ),
+                                    ),
+                                    Row(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Text(snapshot.data.attributes.name,
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16,
+                                              color: Colors.black),),
+
+                                        SizedBox(
+                                          width: screenWidth(context, mulBy: 0.04),
+                                        ),
+                                        Expanded(
+                                          child: ListView.builder(
+                                              itemCount: 4,
+                                              shrinkWrap: true,
+                                              itemBuilder: (BuildContext context, i)
+                                              => RichText(
+                                                text: TextSpan(
+                                                  text: '${snapshot.data.attributes.attribute[i]["name"]}: ',
+                                                  style: TextStyle(
+                                                      fontWeight: FontWeight.bold,
+                                                      fontSize: 15,
+                                                      color: Colors.black),
+                                                  children: <TextSpan>[
+                                                    TextSpan(
+                                                        text: snapshot.data.attributes.attribute[i]["text"],
+                                                        style: TextStyle(fontWeight: FontWeight.normal)),
+                                                  ],
+                                                ),
+                                              )
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                    SingleChildScrollView(
+                                        child: Text("This product is available for Free Shipping above 0."))
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: screenHeight(context, mulBy: 0.015),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
-              );
-            }
-            return CircularProgressIndicator(
-              color: Color(0xff0FAA51B),
+              ),
             );
           }
-          )
-        ),
+          return Center(
+            child: CircularProgressIndicator(
+              color: Color(0xff0FAA51B),
+            ),
+          );
+        }
+        )
       ),
     );
   }
