@@ -370,99 +370,99 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> with TickerProv
                         SizedBox(
                           height: screenHeight(context, mulBy: 0.015),
                         ),
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(15),
-                          child: Column(
-                            children: [
-                              TabBar(
-                                labelColor: Colors.white,
-                                unselectedLabelColor: Colors.black,
-                                controller: controller,
-
-                                indicator: const BoxDecoration(
-                                  color: Colors.grey,
-                                ),
-                                tabs: [
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(50),
-                                    child: Tab(
-
-                                      text: 'Description',
-                                      height: screenHeight(context, mulBy: 0.07),
-
-                                    ),
-                                  ),
-                                  Tab(
-                                    text: 'Specifications',
-                                    height: screenHeight(context, mulBy: 0.07),
-
-                                  ),
-                                  Tab(
-                                    height: screenHeight(context, mulBy: 0.07),
-                                    text: 'Shipping & Policies',
-                                  ),
-                                ],
-                              ),
-                              Container(
-                                height: screenHeight(context, mulBy: .3),
-                                padding: EdgeInsets.only(
-                                    left: screenWidth(context,mulBy: 0.03),
-                                    right: screenWidth(context,mulBy: 0.03),
-                                    top: screenHeight(context, mulBy: 0.02)
-                                ),
-                                child: TabBarView(
-                                  physics: const BouncingScrollPhysics(),
-                                  controller: controller,
-                                  children: <Widget>[
-                                    SingleChildScrollView(
-                                      child: Text(
-                                        snapshot.data.desc
-                                      ),
-                                    ),
-                                    Row(
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Text(snapshot.data.attributes.name,
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 16,
-                                              color: Colors.black),),
-
-                                        SizedBox(
-                                          width: screenWidth(context, mulBy: 0.04),
-                                        ),
-                                        Expanded(
-                                          child: ListView.builder(
-                                              itemCount: 4,
-                                              shrinkWrap: true,
-                                              itemBuilder: (BuildContext context, i)
-                                              => RichText(
-                                                text: TextSpan(
-                                                  text: '${snapshot.data.attributes.attribute[i]["name"]}: ',
-                                                  style: TextStyle(
-                                                      fontWeight: FontWeight.bold,
-                                                      fontSize: 15,
-                                                      color: Colors.black),
-                                                  children: <TextSpan>[
-                                                    TextSpan(
-                                                        text: snapshot.data.attributes.attribute[i]["text"],
-                                                        style: TextStyle(fontWeight: FontWeight.normal)),
-                                                  ],
-                                                ),
-                                              )
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                    SingleChildScrollView(
-                                      child: Text("This product is available for Free Shipping above 0."))
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                        // ClipRRect(
+                        //   borderRadius: BorderRadius.circular(15),
+                        //   child: Column(
+                        //     children: [
+                        //       TabBar(
+                        //         labelColor: Colors.white,
+                        //         unselectedLabelColor: Colors.black,
+                        //         controller: controller,
+                        //
+                        //         indicator: const BoxDecoration(
+                        //           color: Colors.grey,
+                        //         ),
+                        //         tabs: [
+                        //           ClipRRect(
+                        //             borderRadius: BorderRadius.circular(50),
+                        //             child: Tab(
+                        //
+                        //               text: 'Description',
+                        //               height: screenHeight(context, mulBy: 0.07),
+                        //
+                        //             ),
+                        //           ),
+                        //           Tab(
+                        //             text: 'Specifications',
+                        //             height: screenHeight(context, mulBy: 0.07),
+                        //
+                        //           ),
+                        //           Tab(
+                        //             height: screenHeight(context, mulBy: 0.07),
+                        //             text: 'Shipping & Policies',
+                        //           ),
+                        //         ],
+                        //       ),
+                        //       Container(
+                        //         height: screenHeight(context, mulBy: .3),
+                        //         padding: EdgeInsets.only(
+                        //             left: screenWidth(context,mulBy: 0.03),
+                        //             right: screenWidth(context,mulBy: 0.03),
+                        //             top: screenHeight(context, mulBy: 0.02)
+                        //         ),
+                        //         child: TabBarView(
+                        //           physics: const BouncingScrollPhysics(),
+                        //           controller: controller,
+                        //           children: <Widget>[
+                        //             SingleChildScrollView(
+                        //               child: Text(
+                        //                 snapshot.data.desc
+                        //               ),
+                        //             ),
+                        //             Row(
+                        //               crossAxisAlignment: CrossAxisAlignment.center,
+                        //               mainAxisAlignment: MainAxisAlignment.center,
+                        //               children: [
+                        //                 Text(snapshot.data.attributes.name,
+                        //                   style: TextStyle(
+                        //                       fontWeight: FontWeight.bold,
+                        //                       fontSize: 16,
+                        //                       color: Colors.black),),
+                        //
+                        //                 SizedBox(
+                        //                   width: screenWidth(context, mulBy: 0.04),
+                        //                 ),
+                        //                 Expanded(
+                        //                   child: ListView.builder(
+                        //                       itemCount: 4,
+                        //                       shrinkWrap: true,
+                        //                       itemBuilder: (BuildContext context, i)
+                        //                       => RichText(
+                        //                         text: TextSpan(
+                        //                           text: '${snapshot.data.attributes.attribute[i]["name"]}: ',
+                        //                           style: TextStyle(
+                        //                               fontWeight: FontWeight.bold,
+                        //                               fontSize: 15,
+                        //                               color: Colors.black),
+                        //                           children: <TextSpan>[
+                        //                             TextSpan(
+                        //                                 text: snapshot.data.attributes.attribute[i]["text"],
+                        //                                 style: TextStyle(fontWeight: FontWeight.normal)),
+                        //                           ],
+                        //                         ),
+                        //                       )
+                        //                   ),
+                        //                 )
+                        //               ],
+                        //             ),
+                        //             SingleChildScrollView(
+                        //               child: Text("This product is available for Free Shipping above 0."))
+                        //           ],
+                        //         ),
+                        //       ),
+                        //     ],
+                        //   ),
+                        // ),
                         SizedBox(
                           height: screenHeight(context, mulBy: 0.015),
                         ),
@@ -600,99 +600,99 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> with TickerProv
                         SizedBox(
                           height: screenHeight(context, mulBy: 0.015),
                         ),
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(15),
-                          child: Column(
-                            children: [
-                              TabBar(
-                                labelColor: Colors.white,
-                                unselectedLabelColor: Colors.black,
-                                controller: controller,
-
-                                indicator: const BoxDecoration(
-                                  color: Colors.grey,
-                                ),
-                                tabs: [
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(50),
-                                    child: Tab(
-
-                                      text: 'Description',
-                                      height: screenHeight(context, mulBy: 0.07),
-
-                                    ),
-                                  ),
-                                  Tab(
-                                    text: 'Specifications',
-                                    height: screenHeight(context, mulBy: 0.07),
-
-                                  ),
-                                  Tab(
-                                    height: screenHeight(context, mulBy: 0.07),
-                                    text: 'Shipping & Policies',
-                                  ),
-                                ],
-                              ),
-                              Container(
-                                height: screenHeight(context, mulBy: .3),
-                                padding: EdgeInsets.only(
-                                    left: screenWidth(context,mulBy: 0.03),
-                                    right: screenWidth(context,mulBy: 0.03),
-                                    top: screenHeight(context, mulBy: 0.02)
-                                ),
-                                child: TabBarView(
-                                  physics: const BouncingScrollPhysics(),
-                                  controller: controller,
-                                  children: <Widget>[
-                                    SingleChildScrollView(
-                                      child: Text(
-                                          snapshot.data.desc
-                                      ),
-                                    ),
-                                    Row(
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Text(snapshot.data.attributes.name,
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 16,
-                                              color: Colors.black),),
-
-                                        SizedBox(
-                                          width: screenWidth(context, mulBy: 0.04),
-                                        ),
-                                        Expanded(
-                                          child: ListView.builder(
-                                              itemCount: 4,
-                                              shrinkWrap: true,
-                                              itemBuilder: (BuildContext context, i)
-                                              => RichText(
-                                                text: TextSpan(
-                                                  text: '${snapshot.data.attributes.attribute[i]["name"]}: ',
-                                                  style: TextStyle(
-                                                      fontWeight: FontWeight.bold,
-                                                      fontSize: 15,
-                                                      color: Colors.black),
-                                                  children: <TextSpan>[
-                                                    TextSpan(
-                                                        text: snapshot.data.attributes.attribute[i]["text"],
-                                                        style: TextStyle(fontWeight: FontWeight.normal)),
-                                                  ],
-                                                ),
-                                              )
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                    SingleChildScrollView(
-                                        child: Text("This product is available for Free Shipping above 0."))
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                        // ClipRRect(
+                        //   borderRadius: BorderRadius.circular(15),
+                        //   child: Column(
+                        //     children: [
+                        //       TabBar(
+                        //         labelColor: Colors.white,
+                        //         unselectedLabelColor: Colors.black,
+                        //         controller: controller,
+                        //
+                        //         indicator: const BoxDecoration(
+                        //           color: Colors.grey,
+                        //         ),
+                        //         tabs: [
+                        //           ClipRRect(
+                        //             borderRadius: BorderRadius.circular(50),
+                        //             child: Tab(
+                        //
+                        //               text: 'Description',
+                        //               height: screenHeight(context, mulBy: 0.07),
+                        //
+                        //             ),
+                        //           ),
+                        //           Tab(
+                        //             text: 'Specifications',
+                        //             height: screenHeight(context, mulBy: 0.07),
+                        //
+                        //           ),
+                        //           Tab(
+                        //             height: screenHeight(context, mulBy: 0.07),
+                        //             text: 'Shipping & Policies',
+                        //           ),
+                        //         ],
+                        //       ),
+                        //       Container(
+                        //         height: screenHeight(context, mulBy: .3),
+                        //         padding: EdgeInsets.only(
+                        //             left: screenWidth(context,mulBy: 0.03),
+                        //             right: screenWidth(context,mulBy: 0.03),
+                        //             top: screenHeight(context, mulBy: 0.02)
+                        //         ),
+                        //         child: TabBarView(
+                        //           physics: const BouncingScrollPhysics(),
+                        //           controller: controller,
+                        //           children: <Widget>[
+                        //             SingleChildScrollView(
+                        //               child: Text(
+                        //                   snapshot.data.desc
+                        //               ),
+                        //             ),
+                        //             Row(
+                        //               crossAxisAlignment: CrossAxisAlignment.center,
+                        //               mainAxisAlignment: MainAxisAlignment.center,
+                        //               children: [
+                        //                 Text(snapshot.data.attributes.name,
+                        //                   style: TextStyle(
+                        //                       fontWeight: FontWeight.bold,
+                        //                       fontSize: 16,
+                        //                       color: Colors.black),),
+                        //
+                        //                 SizedBox(
+                        //                   width: screenWidth(context, mulBy: 0.04),
+                        //                 ),
+                        //                 Expanded(
+                        //                   child: ListView.builder(
+                        //                       itemCount: 4,
+                        //                       shrinkWrap: true,
+                        //                       itemBuilder: (BuildContext context, i)
+                        //                       => RichText(
+                        //                         text: TextSpan(
+                        //                           text: '${snapshot.data.attributes.attribute[i]["name"]}: ',
+                        //                           style: TextStyle(
+                        //                               fontWeight: FontWeight.bold,
+                        //                               fontSize: 15,
+                        //                               color: Colors.black),
+                        //                           children: <TextSpan>[
+                        //                             TextSpan(
+                        //                                 text: snapshot.data.attributes.attribute[i]["text"],
+                        //                                 style: TextStyle(fontWeight: FontWeight.normal)),
+                        //                           ],
+                        //                         ),
+                        //                       )
+                        //                   ),
+                        //                 )
+                        //               ],
+                        //             ),
+                        //             SingleChildScrollView(
+                        //                 child: Text("This product is available for Free Shipping above 0."))
+                        //           ],
+                        //         ),
+                        //       ),
+                        //     ],
+                        //   ),
+                        // ),
                         SizedBox(
                           height: screenHeight(context, mulBy: 0.015),
                         ),
