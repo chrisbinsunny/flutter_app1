@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 
 import 'package:http/http.dart' as http;
@@ -60,6 +61,7 @@ Future<List<Product>> getFeaturedProducts() async {
 }
 
 Future<ProductInfo> getDetailedProduct(String id) async {
+  log(id);
   final http.Response response = await http.get(
     Uri.parse('https://poshrobe.com/products/product_view/$id'),
   );

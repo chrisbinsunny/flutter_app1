@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_app1/product_detail.dart';
+import 'package:flutter_app1/widgets.dart';
 import '../Resources/AppColors.dart';
 import '../accounts/LoginPage.dart';
 import '../backend/backend_class.dart';
@@ -28,50 +29,44 @@ class _HomePageState extends State<HomePage>
     'Monica Geller'
   ];
 
-
-  List<Tab> tabs=[];
-  List<Header> headers=[];
-  List<Product> featuredProducts=[];
-  List<Product> recommendedProducts=[];
+  List<Tab> tabs = [];
+  List<Header> headers = [];
+  List<Product> featuredProducts = [];
+  List<Product> recommendedProducts = [];
+  late TabController tabController;
+  ScrollController scrollController = ScrollController();
 
   late Future _future;
-  String selectedCategory="475";
+  String selectedCategory = "475";
 
   Future _getHomeContents() async {
     try {
       await Future.wait([
-        getHeaderCategories().then(
-                (value) {
-                  value.forEach((element) {
-                    tabs.add(Tab(text: element.name, ));
-                    headers.add(element);
-                  });
-
-                }
-        ),
-        getFeaturedProducts().then(
-                (value) {
-              value.forEach((element) {
-                featuredProducts.add(element);
-              });
-
-            }
-        ),
-        getRecommendedProducts().then(
-                (value) {
-              value.forEach((element) {
-                recommendedProducts.add(element);
-              });
-
-            }
-        ),
+        getHeaderCategories().then((value) {
+          value.forEach((element) {
+            tabs.add(Tab(
+              text: element.name,
+            ));
+            headers.add(element);
+          });
+          tabController = TabController(length: tabs.length, vsync: this);
+        }),
+        getFeaturedProducts().then((value) {
+          value.forEach((element) {
+            featuredProducts.add(element);
+          });
+        }),
+        getRecommendedProducts().then((value) {
+          value.forEach((element) {
+            recommendedProducts.add(element);
+          });
+        }),
       ]);
       return tabs;
     } catch (e) {
       rethrow;
     }
   }
-
 
   @override
   void initState() {
@@ -82,6 +77,7 @@ class _HomePageState extends State<HomePage>
   @override
   void dispose() {
     tabs.clear();
+    headers.clear();
     super.dispose();
   }
 
@@ -96,10 +92,11 @@ class _HomePageState extends State<HomePage>
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 InkWell(
-                  onTap: (){
+                  onTap: () {
                     HelperFunctions.saveUserLoggedIn(false);
-                    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
-                    LoginPage()), (Route<dynamic> route) => false);
+                    Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(builder: (context) => LoginPage()),
+                        (Route<dynamic> route) => false);
                   },
                   child: Padding(
                     padding: const EdgeInsets.only(left: 30),
@@ -124,31 +121,30 @@ class _HomePageState extends State<HomePage>
             future: _future,
             builder: (context, AsyncSnapshot snapshot) {
               if (snapshot.hasData) {
-                return Flexible(
+                return Expanded(
                     child: ListView(
-                      padding: const EdgeInsets.all(8),
-                      shrinkWrap: true,
-                      physics: ScrollPhysics(),
-                      children: <Widget>[
-                        _topbar(),
-                        _tabLayouts(),
-                        _tabProducts(),
-                        _categoryWidget(),
-                        _setFeaturedProduct(),
-                        _banner(),
-                        _setRecommendedList()
-                      ],
-                    )
-                );
+                  padding: const EdgeInsets.all(8),
+                  shrinkWrap: true,
+                  physics: BouncingScrollPhysics(),
+                  children: <Widget>[
+                    //_topbar(),
+                    _tabLayouts(),
+                    _tabProducts(),
+                    //_categoryWidget(),
+                    _setFeaturedProduct(),
+                    //_banner(),
+                    _setRecommendedList()
+                  ],
+                ));
               }
               return SizedBox(
                   height: screenHeight(context, mulBy: 0.3),
-                  child: Center(child: CircularProgressIndicator(
+                  child: Center(
+                      child: CircularProgressIndicator(
                     color: Color(AppColors.commonOrange),
                   )));
             },
           ),
-
         ],
       ),
     );
@@ -208,166 +204,62 @@ class _HomePageState extends State<HomePage>
   }
 
   Widget _tabLayouts() {
-    return DefaultTabController(
-      length: tabs.length,
-      child: TabBar(
-        isScrollable: true,
-        unselectedLabelColor: Colors.grey,
-        labelColor: Colors.white,
-        indicatorSize: TabBarIndicatorSize.tab,
-        onTap: (no){
-          setState(() {
-            selectedCategory= headers[no].id;
-          });
-        },
-        indicator: BubbleTabIndicator(
-          indicatorHeight: 25.0,
-          indicatorColor: Color(AppColors.commonOrange),
-          tabBarIndicatorSize: TabBarIndicatorSize.tab,
-        ),
-        tabs: tabs,),
+    return TabBar(
+      isScrollable: true,
+      unselectedLabelColor: Colors.grey,
+      labelColor: Colors.white,
+      indicatorSize: TabBarIndicatorSize.tab,
+      onTap: (no) {
+        setState(() {
+          selectedCategory = headers[no].id;
+          scrollController.animateTo(0,
+              duration: Duration(milliseconds: 50), curve: Curves.ease);
+        });
+      },
+      controller: tabController,
+      indicator: BubbleTabIndicator(
+        indicatorHeight: 25.0,
+        indicatorColor: Color(AppColors.commonOrange),
+        tabBarIndicatorSize: TabBarIndicatorSize.tab,
+      ),
+      tabs: tabs,
     );
   }
 
   Widget _tabProducts() {
     return Container(
       height: screenHeight(context, mulBy: 0.9),
-      width: screenWidth(context),
       child: FutureBuilder(
         future: getCategoryProducts(selectedCategory),
         builder: (context, AsyncSnapshot snapshot) {
           if (snapshot.hasData) {
             return GridView.builder(
-              physics: const ScrollPhysics(),
+              physics: const BouncingScrollPhysics(),
               shrinkWrap: true,
               scrollDirection: Axis.horizontal,
               itemCount: snapshot.data!.length,
+              controller: scrollController,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  childAspectRatio: 1.5,
-                  crossAxisCount:  2 ),
+                  childAspectRatio: 1.5, crossAxisCount: 2),
               itemBuilder: (context, index) {
-                return InkWell(
-                  onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProductDetailsPage(
-                      id: snapshot.data[index].id,
-                    )));
-                  },
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Image.network(
-                        "https://poshrobe.com/image/product_image/${snapshot.data[index].id}/MEDIUM",
-                        height: screenHeight(context, mulBy: 0.27),
-                        fit: BoxFit.fill,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8.0),
-                        child: Row(
-                          children: [
-                            Text("Rs. ${snapshot.data[index].rentPrice.toString().split(".")[0]}",style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16),),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 4.0),
-                              child: Text('/ Rental',style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 13),),
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      Padding(
-                        padding: const EdgeInsets.only(top: 3.0),
-                        child: Row(
-                          children: [
-                            Text("Rs. ${snapshot.data[index].salePrice.toString().split(".")[0]}",style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16),),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 4.0),
-                              child: Text('/ Sale',style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 13),),
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8.0),
-                        child: SizedBox(
-                          width: 185.0,
-                          child: Text(
-                            snapshot.data[index].name,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            softWrap: false,
-                            style: TextStyle(color: Colors.black87, fontSize: 12.0),
-                          ),
-                        ),
-                      ),
-                      // Container(
-                      //   height: screenHeight(context, mulBy: 0.15),
-                      //   alignment: Alignment.bottomCenter,
-                      //   padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                      //   decoration: BoxDecoration(
-                      //     gradient: LinearGradient(
-                      //         begin: Alignment.bottomCenter,
-                      //         end: Alignment.topCenter,
-                      //         colors: [Colors.black, Colors.transparent]),
-                      //     borderRadius: BorderRadius.circular(10),
-                      //   ),
-                      //   child: Column(
-                      //     crossAxisAlignment: CrossAxisAlignment.start,
-                      //     mainAxisSize: MainAxisSize.min,
-                      //     children: [
-                      //       Row(
-                      //         children: [
-                      //           Text("Rs. ${snapshot.data[index].rentPrice.toString().split(".")[0]}",style: TextStyle(
-                      //               color: Colors.white,
-                      //               fontWeight: FontWeight.bold,
-                      //               fontSize: 16),),
-                      //           Text(' / Rental',style: TextStyle(
-                      //               color: Colors.grey,
-                      //               fontSize: 13),),
-                      //         ],
-                      //       ),
-                      //
-                      //       Row(
-                      //         children: [
-                      //           Text("Rs. ${snapshot.data[index].salePrice.toString().split(".")[0]}",style: TextStyle(
-                      //               color: Colors.white,
-                      //               fontWeight: FontWeight.bold,
-                      //               fontSize: 16),),
-                      //           Text(' / Sale',style: TextStyle(
-                      //               color: Colors.grey,
-                      //               fontSize: 13),),
-                      //         ],
-                      //       ),
-                      //
-                      //       Text(
-                      //         snapshot.data[index].name,
-                      //         maxLines: 2,
-                      //         overflow: TextOverflow.ellipsis,
-                      //         softWrap: false,
-                      //         style: TextStyle(color: Colors.white60, fontSize: 12.0),
-                      //       ),
-                      //
-                      //     ],
-                      //   ),
-                      // ),
-                    ],
-                  ),
-                );
+                return ProductView(
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => ProductDetailsPage(
+                                id: snapshot.data[index].id,
+                              )));
+                    },
+                    imgId: snapshot.data[index].id,
+                    rentPrice: snapshot.data[index].rentPrice,
+                    salePrice: snapshot.data[index].salePrice,
+                    name: snapshot.data[index].name);
               },
             );
           }
           return SizedBox(
               height: screenHeight(context, mulBy: 0.3),
-              child: Center(child: CircularProgressIndicator(
+              child: Center(
+                  child: CircularProgressIndicator(
                 color: Color(AppColors.commonOrange),
               )));
         },
@@ -379,15 +271,16 @@ class _HomePageState extends State<HomePage>
     return Container(
       margin: EdgeInsets.all(1),
       width: double.infinity,
-      height:180,
+      height: 180,
       child: ListView.builder(
           scrollDirection: Axis.horizontal,
           itemCount: homeArray.length,
+          physics: const BouncingScrollPhysics(),
           itemBuilder: (BuildContext context, int index) {
-        return Container(
-          child: setHomeBanner(index),
-        );
-      }),
+            return Container(
+              child: setHomeBanner(index),
+            );
+          }),
     );
   }
 
@@ -416,7 +309,7 @@ class _HomePageState extends State<HomePage>
               Column(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(top: 8.0,left: 10),
+                    padding: const EdgeInsets.only(top: 8.0, left: 10),
                     child: SizedBox(
                       width: 185.0,
                       child: Text(
@@ -424,7 +317,10 @@ class _HomePageState extends State<HomePage>
                         maxLines: 4,
                         overflow: TextOverflow.ellipsis,
                         softWrap: false,
-                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 19.0),
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 19.0),
                       ),
                     ),
                   ),
@@ -433,10 +329,15 @@ class _HomePageState extends State<HomePage>
                     child: Row(
                       children: [
                         Text('Shop Now',
-                            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold)),
                         Padding(
                           padding: const EdgeInsets.only(left: 12.0),
-                          child: Icon(CupertinoIcons.arrow_right,color: Colors.white,),
+                          child: Icon(
+                            CupertinoIcons.arrow_right,
+                            color: Colors.white,
+                          ),
                         )
                       ],
                     ),
@@ -448,7 +349,6 @@ class _HomePageState extends State<HomePage>
           ),
         ),
       ),
-
     );
   }
 
@@ -459,101 +359,50 @@ class _HomePageState extends State<HomePage>
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.only(left: 13.0,right: 13.0,top: 10.0),
+              padding: const EdgeInsets.only(left: 5.0, right: 13.0, top: 10.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text('Featured Products',
-                      style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold,fontSize: 16)),
-
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16)),
                   Text('See All',
-                      style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold,fontSize: 16)),
+                      style: TextStyle(
+                          color: Colors.grey,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16)),
                 ],
               ),
             ),
-
             Flexible(
-                child:
-                Padding(
-                  padding: const EdgeInsets.only(left: 13.0,right: 13.0,top: 10.0),
-                  child: _featureListData(),
-                ) // ListView
-            )
-
+                child: Padding(
+              padding: const EdgeInsets.only(top: 10.0),
+              child: _featureListData(),
+            ) // ListView
+                )
           ],
         ),
       ),
-
     );
   }
 
   Widget _featureListData() {
     return ListView.builder(
-      itemCount: featuredProducts.length,
+        itemCount: featuredProducts.length,
         scrollDirection: Axis.horizontal,
         shrinkWrap: true,
-        physics: ScrollPhysics(),
-        itemBuilder: (BuildContext context, int index){
-      return Container(
-        margin: EdgeInsets.only(right: screenWidth(context, mulBy: 0.03)),
-        width: 155,
-        height: 248,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Image.network(
-              "https://poshrobe.com/image/product_image/${featuredProducts[index].id}/MEDIUM",
-              height: screenHeight(context, mulBy: 0.27),
-              fit: BoxFit.fill,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: Row(
-                children: [
-                  Text("Rs. ${featuredProducts[index].rentPrice.toString().split(".")[0]}",style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16),),
-                  Text(' / Rental',style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 13),),
-                ],
-              ),
-            ),
-
-            Padding(
-              padding: const EdgeInsets.only(top: 3.0),
-              child: Row(
-                children: [
-                  Text("Rs. ${featuredProducts[index].rentPrice.toString().split(".")[0]}",style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16),),
-                  Text(' / Sale',style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 13),),
-                ],
-              ),
-            ),
-
-            Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: SizedBox(
-                width: 185.0,
-                child: Text(
-                  featuredProducts[index].name,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  softWrap: false,
-                  style: TextStyle(color: Colors.black87, fontSize: 12.0),
-                ),
-              ),
-            ),
-
-          ],
-        ),
-      );
-    });
+        physics: const BouncingScrollPhysics(),
+        itemBuilder: (BuildContext context, int index) {
+          return ProductView(
+            onTap: () {},
+            imgId: featuredProducts[index].id,
+            rentPrice: featuredProducts[index].rentPrice,
+            salePrice: featuredProducts[index].salePrice,
+            name: featuredProducts[index].name,
+          );
+        });
   }
 
   Widget _setRecommendedList() {
@@ -562,7 +411,7 @@ class _HomePageState extends State<HomePage>
         height: 320,
         child: Column(children: [
           Padding(
-            padding: const EdgeInsets.only(left: 13.0, right: 13.0, top: 10.0),
+            padding: const EdgeInsets.only(left: 5.0, right: 13.0, top: 10.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -579,15 +428,12 @@ class _HomePageState extends State<HomePage>
               ],
             ),
           ),
-
           Flexible(
-              child:
-              Padding(
-                padding: const EdgeInsets.only(left: 13.0,right: 13.0,top: 10.0),
-                child: _recommendedListData(),
-              ) // ListView
-          )
-
+              child: Padding(
+            padding: const EdgeInsets.only(top: 10.0),
+            child: _recommendedListData(),
+          ) // ListView
+              )
         ]),
       ),
     );
@@ -597,10 +443,11 @@ class _HomePageState extends State<HomePage>
     return Container(
       margin: EdgeInsets.all(1),
       width: double.infinity,
-      height:160,
+      height: 160,
       child: ListView.builder(
           scrollDirection: Axis.horizontal,
           itemCount: homeArray.length,
+          physics: const BouncingScrollPhysics(),
           itemBuilder: (BuildContext context, int index) {
             return Container(
               child: setMiddleBanner(index),
@@ -666,7 +513,6 @@ class _HomePageState extends State<HomePage>
           ),*/
         ),
       ),
-
     );
   }
 
@@ -675,68 +521,15 @@ class _HomePageState extends State<HomePage>
         itemCount: recommendedProducts.length,
         scrollDirection: Axis.horizontal,
         shrinkWrap: true,
-        physics: ScrollPhysics(),
-        itemBuilder: (BuildContext context, int index){
-          return Container(
-            margin: EdgeInsets.only(right: screenWidth(context, mulBy: 0.03)),
-            width: 155,
-            height: 248,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Image.network(
-                  "https://poshrobe.com/image/product_image/${recommendedProducts[index].id}/MEDIUM",
-                  height: screenHeight(context, mulBy: 0.27),
-                  fit: BoxFit.fill,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: Row(
-                    children: [
-                      Text("Rs. ${recommendedProducts[index].rentPrice.toString().split(".")[0]}",style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16),),
-                      Text(' / Rental',style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 13),),
-                    ],
-                  ),
-                ),
-
-                Padding(
-                  padding: const EdgeInsets.only(top: 3.0),
-                  child: Row(
-                    children: [
-                      Text("Rs. ${recommendedProducts[index].rentPrice.toString().split(".")[0]}",style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16),),
-                      Text(' / Sale',style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 13),),
-                    ],
-                  ),
-                ),
-
-                Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: SizedBox(
-                    width: 185.0,
-                    child: Text(
-                      recommendedProducts[index].name,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      softWrap: false,
-                      style: TextStyle(color: Colors.black87, fontSize: 12.0),
-                    ),
-                  ),
-                ),
-
-              ],
-            ),
+        physics: const BouncingScrollPhysics(),
+        itemBuilder: (BuildContext context, int index) {
+          return ProductView(
+            onTap: () {},
+            imgId: recommendedProducts[index].id,
+            rentPrice: recommendedProducts[index].rentPrice,
+            salePrice: recommendedProducts[index].salePrice,
+            name: recommendedProducts[index].name,
           );
         });
   }
 }
-

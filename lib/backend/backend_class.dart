@@ -62,7 +62,7 @@ class ProductInfo {
   final String brand;
   final String condition;
   final String sku;
-  final Attributes attributes;
+  //final Attributes attributes;
 
   ProductInfo({
     required this.id,
@@ -75,7 +75,7 @@ class ProductInfo {
     required this.brand,
     required this.condition,
     required this.sku,
-    required this.attributes
+    //required this.attributes
   });
 
   factory ProductInfo.fromJson(Map<String, dynamic> json){
@@ -93,7 +93,7 @@ class ProductInfo {
       brand:  json['brand_name'].toString(),
       condition: json['prod_condition'].toString(),
       sku: json['product_sku'].toString(),
-      attributes: Attributes.fromJson(json['attribute_groups'][0])
+      //attributes: Attributes.fromJson(json['attribute_groups'][0])
     );
   }
 }
