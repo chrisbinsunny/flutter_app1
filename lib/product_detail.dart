@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_app1/Resources/AppColors.dart';
@@ -22,6 +24,7 @@ class ProductDetailsPage extends StatefulWidget {
 class _ProductDetailsPageState extends State<ProductDetailsPage> with TickerProviderStateMixin{
 
   List<String> imgList = [];
+  String? selectedSize;
 
   final CarouselController _controller = CarouselController();
   bool rent= true;
@@ -31,6 +34,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> with TickerProv
   @override
   void initState() {
     controller= TabController(length: 3, vsync: this,);
+    log(widget.id);
     _future = getDetailedProduct(widget.id);
     super.initState();
   }
@@ -192,13 +196,6 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> with TickerProv
                                     fontWeight: FontWeight.bold
                                 ),
                               ),
-                              Text(
-                                "per event",
-                                style: TextStyle(
-                                  fontSize: 16,
-
-                                ),
-                              ),
                             ],
                           ),
                         ),
@@ -209,496 +206,8 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> with TickerProv
                     height: screenHeight(context, mulBy: 0.02),
                   ),
                   rent?
-                  Container(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Rent the product for 3 Days.",
-                          style: TextStyle(
-                              fontSize: 17,
-                              fontWeight: FontWeight.bold
-                          ),
-                        ),
-
-                        SizedBox(
-                          height: screenHeight(context, mulBy: 0.012),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Rental Security: Rs ${snapshot.data.security}",
-                              style: TextStyle(
-                                fontSize: 15,
-                              ),
-                            ),
-                            Text(
-                              "Brand: ${snapshot.data.brand}",
-                              style: TextStyle(
-                                fontSize: 15,
-                              ),
-                            ),
-
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Condition: ${snapshot.data.condition}",
-                              style: TextStyle(
-                                fontSize: 15,
-                              ),
-                            ),
-                            Text(
-                              "SKU: ${snapshot.data.sku}",
-                              style: TextStyle(
-                                fontSize: 15,
-                              ),
-                            ),
-
-                          ],
-                        ),
-                        SizedBox(
-                          height: screenHeight(context, mulBy: 0.015),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Size: ",
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold
-                              ),
-                            ),
-                            Container(
-                              width: screenWidth(context, mulBy: 0.27),
-                              height: screenHeight(context, mulBy: 0.05),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.grey.withOpacity(0.2),
-                              ),
-                            ),
-                            SizedBox(
-                              width: screenWidth(context, mulBy: 0.05),
-                            ),
-                            Text(
-                              "Quantity: ",
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold
-                              ),
-                            ),
-                            Container(
-                              width: screenWidth(context, mulBy: 0.27),
-                              height: screenHeight(context, mulBy: 0.05),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.grey.withOpacity(0.2),
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: screenHeight(context, mulBy: 0.015),
-                        ),
-                        Row(
-                          children: [
-                            Text(
-                              "Pin: ",
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold
-                              ),
-                            ),
-                            Container(
-                              width: screenWidth(context, mulBy: 0.27),
-                              height: screenHeight(context, mulBy: 0.05),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.grey.withOpacity(0.2),
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: screenHeight(context, mulBy: 0.015),
-                        ),
-                        Text(
-                          "Expected Delivery Date: ??",
-                          style: TextStyle(
-                            fontSize: 15,
-                          ),
-                        ),
-                        Text(
-                          "Expected Return Date: ??",
-                          style: TextStyle(
-                            fontSize: 15,
-                          ),
-                        ),
-                        Text(
-                          "Rental Price: Rs ${snapshot.data.rentPrice} + Rental Security: Rs ${snapshot.data.security}",
-                          style: TextStyle(
-                            fontSize: 15,
-                          ),
-                        ),
-                        Text(
-                          "Total Payable Amount: Rs ${int.parse(snapshot.data.rentPrice) + int.parse(snapshot.data.security)} (Taxes included)",
-                          style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold
-                          ),
-                        ),
-                        SizedBox(
-                          height: screenHeight(context, mulBy: 0.02),
-                        ),
-                        Center(
-                          child: Container(
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(50),
-                                color: Color(AppColors.commonOrange)
-                            ),
-                            padding: EdgeInsets.symmetric(
-                                vertical: screenHeight(context, mulBy: 0.02),
-                                horizontal: screenWidth(context, mulBy: 0.04)
-                            ),
-                            child: Text("Add to Cart", style: TextStyle(color: Colors.white, fontSize: 25, fontWeight: FontWeight.bold),),
-                          ),
-                        ),
-                        SizedBox(
-                          height: screenHeight(context, mulBy: 0.015),
-                        ),
-                        // ClipRRect(
-                        //   borderRadius: BorderRadius.circular(15),
-                        //   child: Column(
-                        //     children: [
-                        //       TabBar(
-                        //         labelColor: Colors.white,
-                        //         unselectedLabelColor: Colors.black,
-                        //         controller: controller,
-                        //
-                        //         indicator: const BoxDecoration(
-                        //           color: Colors.grey,
-                        //         ),
-                        //         tabs: [
-                        //           ClipRRect(
-                        //             borderRadius: BorderRadius.circular(50),
-                        //             child: Tab(
-                        //
-                        //               text: 'Description',
-                        //               height: screenHeight(context, mulBy: 0.07),
-                        //
-                        //             ),
-                        //           ),
-                        //           Tab(
-                        //             text: 'Specifications',
-                        //             height: screenHeight(context, mulBy: 0.07),
-                        //
-                        //           ),
-                        //           Tab(
-                        //             height: screenHeight(context, mulBy: 0.07),
-                        //             text: 'Shipping & Policies',
-                        //           ),
-                        //         ],
-                        //       ),
-                        //       Container(
-                        //         height: screenHeight(context, mulBy: .3),
-                        //         padding: EdgeInsets.only(
-                        //             left: screenWidth(context,mulBy: 0.03),
-                        //             right: screenWidth(context,mulBy: 0.03),
-                        //             top: screenHeight(context, mulBy: 0.02)
-                        //         ),
-                        //         child: TabBarView(
-                        //           physics: const BouncingScrollPhysics(),
-                        //           controller: controller,
-                        //           children: <Widget>[
-                        //             SingleChildScrollView(
-                        //               child: Text(
-                        //                 snapshot.data.desc
-                        //               ),
-                        //             ),
-                        //             Row(
-                        //               crossAxisAlignment: CrossAxisAlignment.center,
-                        //               mainAxisAlignment: MainAxisAlignment.center,
-                        //               children: [
-                        //                 Text(snapshot.data.attributes.name,
-                        //                   style: TextStyle(
-                        //                       fontWeight: FontWeight.bold,
-                        //                       fontSize: 16,
-                        //                       color: Colors.black),),
-                        //
-                        //                 SizedBox(
-                        //                   width: screenWidth(context, mulBy: 0.04),
-                        //                 ),
-                        //                 Expanded(
-                        //                   child: ListView.builder(
-                        //                       itemCount: 4,
-                        //                       shrinkWrap: true,
-                        //                       itemBuilder: (BuildContext context, i)
-                        //                       => RichText(
-                        //                         text: TextSpan(
-                        //                           text: '${snapshot.data.attributes.attribute[i]["name"]}: ',
-                        //                           style: TextStyle(
-                        //                               fontWeight: FontWeight.bold,
-                        //                               fontSize: 15,
-                        //                               color: Colors.black),
-                        //                           children: <TextSpan>[
-                        //                             TextSpan(
-                        //                                 text: snapshot.data.attributes.attribute[i]["text"],
-                        //                                 style: TextStyle(fontWeight: FontWeight.normal)),
-                        //                           ],
-                        //                         ),
-                        //                       )
-                        //                   ),
-                        //                 )
-                        //               ],
-                        //             ),
-                        //             SingleChildScrollView(
-                        //               child: Text("This product is available for Free Shipping above 0."))
-                        //           ],
-                        //         ),
-                        //       ),
-                        //     ],
-                        //   ),
-                        // ),
-                        SizedBox(
-                          height: screenHeight(context, mulBy: 0.015),
-                        ),
-                      ],
-                    ),
-                  ):
-                  Container(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Buy Brand New Product and keep it.",
-                          style: TextStyle(
-                              fontSize: 17,
-                              fontWeight: FontWeight.bold
-                          ),
-                        ),
-
-                        SizedBox(
-                          height: screenHeight(context, mulBy: 0.012),
-                        ),
-                        Text(
-                          "Brand: ${snapshot.data.brand}",
-                          style: TextStyle(
-                            fontSize: 15,
-                          ),
-                        ),
-                        Text(
-                          "Condition:  New (Never Used)",
-                          style: TextStyle(
-                            fontSize: 15,
-                          ),
-                        ),
-                        Text(
-                          "SKU: ${snapshot.data.sku}",
-                          style: TextStyle(
-                            fontSize: 15,
-                          ),
-                        ),
-                        SizedBox(
-                          height: screenHeight(context, mulBy: 0.015),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Size: ",
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold
-                              ),
-                            ),
-                            Container(
-                              width: screenWidth(context, mulBy: 0.27),
-                              height: screenHeight(context, mulBy: 0.05),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.grey.withOpacity(0.2),
-                              ),
-                            ),
-                            SizedBox(
-                              width: screenWidth(context, mulBy: 0.05),
-                            ),
-                            Text(
-                              "Quantity: ",
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold
-                              ),
-                            ),
-                            Container(
-                              width: screenWidth(context, mulBy: 0.27),
-                              height: screenHeight(context, mulBy: 0.05),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.grey.withOpacity(0.2),
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: screenHeight(context, mulBy: 0.015),
-                        ),
-                        Row(
-                          children: [
-                            Text(
-                              "Pin: ",
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold
-                              ),
-                            ),
-                            Container(
-                              width: screenWidth(context, mulBy: 0.27),
-                              height: screenHeight(context, mulBy: 0.05),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.grey.withOpacity(0.2),
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: screenHeight(context, mulBy: 0.015),
-                        ),
-                        Text(
-                          "Expected Delivery Date: ??",
-                          style: TextStyle(
-                            fontSize: 15,
-                          ),
-                        ),
-                        Text(
-                          "Total Payable Amount: Rs ${snapshot.data.salePrice} (Taxes included)",
-                          style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold
-                          ),
-                        ),
-                        SizedBox(
-                          height: screenHeight(context, mulBy: 0.02),
-                        ),
-                        Center(
-                          child: Container(
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(50),
-                                color: Color(AppColors.commonOrange)
-                            ),
-                            padding: EdgeInsets.symmetric(
-                                vertical: screenHeight(context, mulBy: 0.02),
-                                horizontal: screenWidth(context, mulBy: 0.04)
-                            ),
-                            child: Text("Add to Cart", style: TextStyle(color: Colors.white, fontSize: 25, fontWeight: FontWeight.bold),),
-                          ),
-                        ),
-                        SizedBox(
-                          height: screenHeight(context, mulBy: 0.015),
-                        ),
-                        // ClipRRect(
-                        //   borderRadius: BorderRadius.circular(15),
-                        //   child: Column(
-                        //     children: [
-                        //       TabBar(
-                        //         labelColor: Colors.white,
-                        //         unselectedLabelColor: Colors.black,
-                        //         controller: controller,
-                        //
-                        //         indicator: const BoxDecoration(
-                        //           color: Colors.grey,
-                        //         ),
-                        //         tabs: [
-                        //           ClipRRect(
-                        //             borderRadius: BorderRadius.circular(50),
-                        //             child: Tab(
-                        //
-                        //               text: 'Description',
-                        //               height: screenHeight(context, mulBy: 0.07),
-                        //
-                        //             ),
-                        //           ),
-                        //           Tab(
-                        //             text: 'Specifications',
-                        //             height: screenHeight(context, mulBy: 0.07),
-                        //
-                        //           ),
-                        //           Tab(
-                        //             height: screenHeight(context, mulBy: 0.07),
-                        //             text: 'Shipping & Policies',
-                        //           ),
-                        //         ],
-                        //       ),
-                        //       Container(
-                        //         height: screenHeight(context, mulBy: .3),
-                        //         padding: EdgeInsets.only(
-                        //             left: screenWidth(context,mulBy: 0.03),
-                        //             right: screenWidth(context,mulBy: 0.03),
-                        //             top: screenHeight(context, mulBy: 0.02)
-                        //         ),
-                        //         child: TabBarView(
-                        //           physics: const BouncingScrollPhysics(),
-                        //           controller: controller,
-                        //           children: <Widget>[
-                        //             SingleChildScrollView(
-                        //               child: Text(
-                        //                   snapshot.data.desc
-                        //               ),
-                        //             ),
-                        //             Row(
-                        //               crossAxisAlignment: CrossAxisAlignment.center,
-                        //               mainAxisAlignment: MainAxisAlignment.center,
-                        //               children: [
-                        //                 Text(snapshot.data.attributes.name,
-                        //                   style: TextStyle(
-                        //                       fontWeight: FontWeight.bold,
-                        //                       fontSize: 16,
-                        //                       color: Colors.black),),
-                        //
-                        //                 SizedBox(
-                        //                   width: screenWidth(context, mulBy: 0.04),
-                        //                 ),
-                        //                 Expanded(
-                        //                   child: ListView.builder(
-                        //                       itemCount: 4,
-                        //                       shrinkWrap: true,
-                        //                       itemBuilder: (BuildContext context, i)
-                        //                       => RichText(
-                        //                         text: TextSpan(
-                        //                           text: '${snapshot.data.attributes.attribute[i]["name"]}: ',
-                        //                           style: TextStyle(
-                        //                               fontWeight: FontWeight.bold,
-                        //                               fontSize: 15,
-                        //                               color: Colors.black),
-                        //                           children: <TextSpan>[
-                        //                             TextSpan(
-                        //                                 text: snapshot.data.attributes.attribute[i]["text"],
-                        //                                 style: TextStyle(fontWeight: FontWeight.normal)),
-                        //                           ],
-                        //                         ),
-                        //                       )
-                        //                   ),
-                        //                 )
-                        //               ],
-                        //             ),
-                        //             SingleChildScrollView(
-                        //                 child: Text("This product is available for Free Shipping above 0."))
-                        //           ],
-                        //         ),
-                        //       ),
-                        //     ],
-                        //   ),
-                        // ),
-                        SizedBox(
-                          height: screenHeight(context, mulBy: 0.015),
-                        ),
-                      ],
-                    ),
-                  ),
+                  rentBuilder(context, snapshot):
+                  buyBuilder(context, snapshot),
                 ],
               ),
             );
@@ -712,6 +221,522 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> with TickerProv
         )
       ),
     );
+  }
+
+  Container buyBuilder(BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+    return Container(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Buy Brand New Product and keep it.",
+                        style: TextStyle(
+                            fontSize: 17,
+                            fontWeight: FontWeight.bold
+                        ),
+                      ),
+
+                      SizedBox(
+                        height: screenHeight(context, mulBy: 0.012),
+                      ),
+                      Text(
+                        "Brand: ${snapshot.data.brand}",
+                        style: TextStyle(
+                          fontSize: 15,
+                        ),
+                      ),
+                      Text(
+                        "Condition:  New (Never Used)",
+                        style: TextStyle(
+                          fontSize: 15,
+                        ),
+                      ),
+                      Text(
+                        "SKU: ${snapshot.data.sku}",
+                        style: TextStyle(
+                          fontSize: 15,
+                        ),
+                      ),
+                      SizedBox(
+                        height: screenHeight(context, mulBy: 0.015),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Size: ",
+                            style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold
+                            ),
+                          ),
+                          Container(
+                            width: screenWidth(context, mulBy: 0.27),
+                            height: screenHeight(context, mulBy: 0.05),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.grey.withOpacity(0.2),
+                            ),
+                          ),
+                          SizedBox(
+                            width: screenWidth(context, mulBy: 0.05),
+                          ),
+                          Text(
+                            "Quantity: ",
+                            style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold
+                            ),
+                          ),
+                          Container(
+                            width: screenWidth(context, mulBy: 0.27),
+                            height: screenHeight(context, mulBy: 0.05),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.grey.withOpacity(0.2),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: screenHeight(context, mulBy: 0.015),
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            "Pin: ",
+                            style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold
+                            ),
+                          ),
+                          Container(
+                            width: screenWidth(context, mulBy: 0.27),
+                            height: screenHeight(context, mulBy: 0.05),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.grey.withOpacity(0.2),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: screenHeight(context, mulBy: 0.015),
+                      ),
+                      Text(
+                        "Expected Delivery Date: ??",
+                        style: TextStyle(
+                          fontSize: 15,
+                        ),
+                      ),
+                      Text(
+                        "Total Payable Amount: Rs ${snapshot.data.salePrice} (Taxes included)",
+                        style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold
+                        ),
+                      ),
+                      SizedBox(
+                        height: screenHeight(context, mulBy: 0.02),
+                      ),
+                      Center(
+                        child: Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(50),
+                              color: Color(AppColors.commonOrange)
+                          ),
+                          padding: EdgeInsets.symmetric(
+                              vertical: screenHeight(context, mulBy: 0.02),
+                              horizontal: screenWidth(context, mulBy: 0.04)
+                          ),
+                          child: Text("Add to Cart", style: TextStyle(color: Colors.white, fontSize: 25, fontWeight: FontWeight.bold),),
+                        ),
+                      ),
+                      SizedBox(
+                        height: screenHeight(context, mulBy: 0.015),
+                      ),
+                      // ClipRRect(
+                      //   borderRadius: BorderRadius.circular(15),
+                      //   child: Column(
+                      //     children: [
+                      //       TabBar(
+                      //         labelColor: Colors.white,
+                      //         unselectedLabelColor: Colors.black,
+                      //         controller: controller,
+                      //
+                      //         indicator: const BoxDecoration(
+                      //           color: Colors.grey,
+                      //         ),
+                      //         tabs: [
+                      //           ClipRRect(
+                      //             borderRadius: BorderRadius.circular(50),
+                      //             child: Tab(
+                      //
+                      //               text: 'Description',
+                      //               height: screenHeight(context, mulBy: 0.07),
+                      //
+                      //             ),
+                      //           ),
+                      //           Tab(
+                      //             text: 'Specifications',
+                      //             height: screenHeight(context, mulBy: 0.07),
+                      //
+                      //           ),
+                      //           Tab(
+                      //             height: screenHeight(context, mulBy: 0.07),
+                      //             text: 'Shipping & Policies',
+                      //           ),
+                      //         ],
+                      //       ),
+                      //       Container(
+                      //         height: screenHeight(context, mulBy: .3),
+                      //         padding: EdgeInsets.only(
+                      //             left: screenWidth(context,mulBy: 0.03),
+                      //             right: screenWidth(context,mulBy: 0.03),
+                      //             top: screenHeight(context, mulBy: 0.02)
+                      //         ),
+                      //         child: TabBarView(
+                      //           physics: const BouncingScrollPhysics(),
+                      //           controller: controller,
+                      //           children: <Widget>[
+                      //             SingleChildScrollView(
+                      //               child: Text(
+                      //                   snapshot.data.desc
+                      //               ),
+                      //             ),
+                      //             Row(
+                      //               crossAxisAlignment: CrossAxisAlignment.center,
+                      //               mainAxisAlignment: MainAxisAlignment.center,
+                      //               children: [
+                      //                 Text(snapshot.data.attributes.name,
+                      //                   style: TextStyle(
+                      //                       fontWeight: FontWeight.bold,
+                      //                       fontSize: 16,
+                      //                       color: Colors.black),),
+                      //
+                      //                 SizedBox(
+                      //                   width: screenWidth(context, mulBy: 0.04),
+                      //                 ),
+                      //                 Expanded(
+                      //                   child: ListView.builder(
+                      //                       itemCount: 4,
+                      //                       shrinkWrap: true,
+                      //                       itemBuilder: (BuildContext context, i)
+                      //                       => RichText(
+                      //                         text: TextSpan(
+                      //                           text: '${snapshot.data.attributes.attribute[i]["name"]}: ',
+                      //                           style: TextStyle(
+                      //                               fontWeight: FontWeight.bold,
+                      //                               fontSize: 15,
+                      //                               color: Colors.black),
+                      //                           children: <TextSpan>[
+                      //                             TextSpan(
+                      //                                 text: snapshot.data.attributes.attribute[i]["text"],
+                      //                                 style: TextStyle(fontWeight: FontWeight.normal)),
+                      //                           ],
+                      //                         ),
+                      //                       )
+                      //                   ),
+                      //                 )
+                      //               ],
+                      //             ),
+                      //             SingleChildScrollView(
+                      //                 child: Text("This product is available for Free Shipping above 0."))
+                      //           ],
+                      //         ),
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
+                      SizedBox(
+                        height: screenHeight(context, mulBy: 0.015),
+                      ),
+                    ],
+                  ),
+                );
+  }
+
+  Container rentBuilder(BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+    return Container(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Rent the product for 3 Days.",
+                        style: TextStyle(
+                            fontSize: 17,
+                            fontWeight: FontWeight.bold
+                        ),
+                      ),
+
+                      SizedBox(
+                        height: screenHeight(context, mulBy: 0.012),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Rental Security: Rs ${snapshot.data.security}",
+                            style: TextStyle(
+                              fontSize: 15,
+                            ),
+                          ),
+                          Text(
+                            "Brand: ${snapshot.data.brand}",
+                            style: TextStyle(
+                              fontSize: 15,
+                            ),
+                          ),
+
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Condition: ${snapshot.data.condition}",
+                            style: TextStyle(
+                              fontSize: 15,
+                            ),
+                          ),
+                          Text(
+                            "SKU: ${snapshot.data.sku}",
+                            style: TextStyle(
+                              fontSize: 15,
+                            ),
+                          ),
+
+                        ],
+                      ),
+                      SizedBox(
+                        height: screenHeight(context, mulBy: 0.015),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Size: ",
+                            style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold
+                            ),
+                          ),
+                          Container(
+                            width: screenWidth(context, mulBy: 0.27),
+                            height: screenHeight(context, mulBy: 0.05),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.grey.withOpacity(0.2),
+                            ),
+                            alignment: Alignment.center,
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton<String>(
+                                alignment: Alignment.center,
+                                isExpanded: false,
+                                items: snapshot.data.filter.map<DropdownMenuItem<String>>((String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(value),
+                                  );
+                                }).toList(),
+                                hint: Text("Select..."),
+                                onChanged: (value) {
+                                  setState(() {
+                                    selectedSize=value;
+                                  });
+                                 },
+                                value: selectedSize,
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: screenWidth(context, mulBy: 0.05),
+                          ),
+                          Text(
+                            "Quantity: ",
+                            style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold
+                            ),
+                          ),
+                          Container(
+                            width: screenWidth(context, mulBy: 0.27),
+                            height: screenHeight(context, mulBy: 0.05),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.grey.withOpacity(0.2),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: screenHeight(context, mulBy: 0.015),
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            "Pin: ",
+                            style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold
+                            ),
+                          ),
+                          Container(
+                            width: screenWidth(context, mulBy: 0.27),
+                            height: screenHeight(context, mulBy: 0.05),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.grey.withOpacity(0.2),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: screenHeight(context, mulBy: 0.015),
+                      ),
+                      Text(
+                        "Expected Delivery Date: ??",
+                        style: TextStyle(
+                          fontSize: 15,
+                        ),
+                      ),
+                      Text(
+                        "Expected Return Date: ??",
+                        style: TextStyle(
+                          fontSize: 15,
+                        ),
+                      ),
+                      Text(
+                        "Rental Price: Rs ${snapshot.data.rentPrice} + Rental Security: Rs ${snapshot.data.security}",
+                        style: TextStyle(
+                          fontSize: 15,
+                        ),
+                      ),
+                      Text(
+                        "Total Payable Amount: Rs ${int.parse(snapshot.data.rentPrice) + int.parse(snapshot.data.security)} (Taxes included)",
+                        style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold
+                        ),
+                      ),
+                      SizedBox(
+                        height: screenHeight(context, mulBy: 0.02),
+                      ),
+                      Center(
+                        child: Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(50),
+                              color: Color(AppColors.commonOrange)
+                          ),
+                          padding: EdgeInsets.symmetric(
+                              vertical: screenHeight(context, mulBy: 0.02),
+                              horizontal: screenWidth(context, mulBy: 0.04)
+                          ),
+                          child: Text("Add to Cart", style: TextStyle(color: Colors.white, fontSize: 25, fontWeight: FontWeight.bold),),
+                        ),
+                      ),
+                      SizedBox(
+                        height: screenHeight(context, mulBy: 0.015),
+                      ),
+                      // ClipRRect(
+                      //   borderRadius: BorderRadius.circular(15),
+                      //   child: Column(
+                      //     children: [
+                      //       TabBar(
+                      //         labelColor: Colors.white,
+                      //         unselectedLabelColor: Colors.black,
+                      //         controller: controller,
+                      //
+                      //         indicator: const BoxDecoration(
+                      //           color: Colors.grey,
+                      //         ),
+                      //         tabs: [
+                      //           ClipRRect(
+                      //             borderRadius: BorderRadius.circular(50),
+                      //             child: Tab(
+                      //
+                      //               text: 'Description',
+                      //               height: screenHeight(context, mulBy: 0.07),
+                      //
+                      //             ),
+                      //           ),
+                      //           Tab(
+                      //             text: 'Specifications',
+                      //             height: screenHeight(context, mulBy: 0.07),
+                      //
+                      //           ),
+                      //           Tab(
+                      //             height: screenHeight(context, mulBy: 0.07),
+                      //             text: 'Shipping & Policies',
+                      //           ),
+                      //         ],
+                      //       ),
+                      //       Container(
+                      //         height: screenHeight(context, mulBy: .3),
+                      //         padding: EdgeInsets.only(
+                      //             left: screenWidth(context,mulBy: 0.03),
+                      //             right: screenWidth(context,mulBy: 0.03),
+                      //             top: screenHeight(context, mulBy: 0.02)
+                      //         ),
+                      //         child: TabBarView(
+                      //           physics: const BouncingScrollPhysics(),
+                      //           controller: controller,
+                      //           children: <Widget>[
+                      //             SingleChildScrollView(
+                      //               child: Text(
+                      //                 snapshot.data.desc
+                      //               ),
+                      //             ),
+                      //             Row(
+                      //               crossAxisAlignment: CrossAxisAlignment.center,
+                      //               mainAxisAlignment: MainAxisAlignment.center,
+                      //               children: [
+                      //                 Text(snapshot.data.attributes.name,
+                      //                   style: TextStyle(
+                      //                       fontWeight: FontWeight.bold,
+                      //                       fontSize: 16,
+                      //                       color: Colors.black),),
+                      //
+                      //                 SizedBox(
+                      //                   width: screenWidth(context, mulBy: 0.04),
+                      //                 ),
+                      //                 Expanded(
+                      //                   child: ListView.builder(
+                      //                       itemCount: 4,
+                      //                       shrinkWrap: true,
+                      //                       itemBuilder: (BuildContext context, i)
+                      //                       => RichText(
+                      //                         text: TextSpan(
+                      //                           text: '${snapshot.data.attributes.attribute[i]["name"]}: ',
+                      //                           style: TextStyle(
+                      //                               fontWeight: FontWeight.bold,
+                      //                               fontSize: 15,
+                      //                               color: Colors.black),
+                      //                           children: <TextSpan>[
+                      //                             TextSpan(
+                      //                                 text: snapshot.data.attributes.attribute[i]["text"],
+                      //                                 style: TextStyle(fontWeight: FontWeight.normal)),
+                      //                           ],
+                      //                         ),
+                      //                       )
+                      //                   ),
+                      //                 )
+                      //               ],
+                      //             ),
+                      //             SingleChildScrollView(
+                      //               child: Text("This product is available for Free Shipping above 0."))
+                      //           ],
+                      //         ),
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
+                      SizedBox(
+                        height: screenHeight(context, mulBy: 0.015),
+                      ),
+                    ],
+                  ),
+                );
   }
 }
 

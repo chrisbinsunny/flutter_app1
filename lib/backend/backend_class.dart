@@ -62,6 +62,7 @@ class ProductInfo {
   final String brand;
   final String condition;
   final String sku;
+  final List<String> filter;
   //final Attributes attributes;
 
   ProductInfo({
@@ -75,6 +76,7 @@ class ProductInfo {
     required this.brand,
     required this.condition,
     required this.sku,
+    required this.filter
     //required this.attributes
   });
 
@@ -82,6 +84,9 @@ class ProductInfo {
     Iterable list = json['images'];
     List<String> images2 = list.map<String>((i) =>
     i['image_file']).toList();
+    Iterable filterList = json['filter'][0]['filters'];
+    List<String> filter2 = filterList.map<String>((i) =>
+    i['filter_name']).toList();
     return ProductInfo(
       id: json['prod_id'].toString(),
       name: json['prod_name'].toString(),
@@ -93,6 +98,7 @@ class ProductInfo {
       brand:  json['brand_name'].toString(),
       condition: json['prod_condition'].toString(),
       sku: json['product_sku'].toString(),
+      filter: filter2
       //attributes: Attributes.fromJson(json['attribute_groups'][0])
     );
   }
