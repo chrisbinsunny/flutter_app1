@@ -1,6 +1,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app1/cart_summary.dart';
 import 'package:flutter_app1/fragments/Sample.dart';
 import 'package:flutter_app1/fragments/Search.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
@@ -20,7 +21,7 @@ List<Widget> _buildScreens() {
   return [
     HomePage(),
     SearchPage(),
-    CartPage(),
+    Cart(),
     Profile()
   ];
 }

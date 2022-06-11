@@ -61,7 +61,6 @@ Future<List<Product>> getFeaturedProducts() async {
 }
 
 Future<ProductInfo> getDetailedProduct(String id) async {
-  log(id);
   final http.Response response = await http.get(
     Uri.parse('https://poshrobe.com/products/product_view/$id'),
   );
@@ -73,6 +72,32 @@ Future<ProductInfo> getDetailedProduct(String id) async {
   return productInfo;
 }
 
+
+Future addToCart(Map data) async {
+  var url = 'https://poshrobe.com/cart/cart_add';
+  var response = await http.post(Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(data)
+  );
+  if (response.statusCode == 200) {
+    return true;
+  }
+  else return false;
+}
+
+Future<CartSummaryData> cartSummary() async {
+  final http.Response response = await http.get(
+    Uri.parse('https://poshrobe.com/cart/cart_display'),
+  );
+  late CartSummaryData data;
+  if (response.statusCode == 200) {
+    var dataJson = json.decode(response.body);
+    data = CartSummaryData.fromJson(dataJson);
+  }
+  return data;
+}
 
 
 Future<List<Product>> getRecommendedProducts() async {

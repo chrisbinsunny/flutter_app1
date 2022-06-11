@@ -62,7 +62,7 @@ class ProductInfo {
   final String brand;
   final String condition;
   final String sku;
-  final List<String> filter;
+  final List<Map<String, String>> filter;
   //final Attributes attributes;
 
   ProductInfo({
@@ -84,9 +84,12 @@ class ProductInfo {
     Iterable list = json['images'];
     List<String> images2 = list.map<String>((i) =>
     i['image_file']).toList();
-    Iterable filterList = json['filter'][0]['filters'];
-    List<String> filter2 = filterList.map<String>((i) =>
-    i['filter_name']).toList();
+    List filterList = json['filter'][0]['filters'];
+    List<Map<String, String>> filter2 = filterList.map<Map<String, String>>((i) =>
+    {
+      "id":i['filter_id'],
+      "name":i['filter_name']
+    }).toList();
     return ProductInfo(
       id: json['prod_id'].toString(),
       name: json['prod_name'].toString(),
@@ -122,6 +125,35 @@ class Attributes {
     return Attributes(
       attribute: json['attribute'],
       name: json['name'].toString(),
+    );
+  }
+}
+
+class CartSummaryData {
+  final String price;
+  final String total;
+  final String tax;
+  final String rentalSecurity;
+  //final List<Product> products;
+
+  CartSummaryData({
+    required this.total,
+    required this.price,
+    required this.tax,
+    required this.rentalSecurity,
+    //required this.products
+  });
+
+  factory CartSummaryData.fromJson(Map<String, dynamic> json){
+    // Iterable list = json['images'];
+    // List<String> images2 = list.map<String>((i) =>
+    // i['image_file']).toList();
+    return CartSummaryData(
+      total: json['cart_summary']['total_include_shipping_charge'].toString(),
+      price: json['cart_summary']['cart_product_price_total'].toString(),
+      tax: json['cart_summary']['cart_tax_total'].toString(),
+      rentalSecurity: json['cart_summary']['rental_security'].toString(),
+
     );
   }
 }
