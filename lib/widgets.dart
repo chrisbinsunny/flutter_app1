@@ -12,7 +12,7 @@ showLoaderDialog(BuildContext context){
       mainAxisSize: MainAxisSize.min,
       children: [
         CircularProgressIndicator(
-          color: Color(AppColors.commonOrange),
+          color: AppColors.commonOrange,
         ),
       ],
     ),
