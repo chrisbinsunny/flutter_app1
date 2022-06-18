@@ -74,7 +74,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage>
                             blurRadius: 3
                         )
                       ],
-                      color: Color(AppColors.commonOrange)),
+                      color: AppColors.commonOrange),
                   padding: EdgeInsets.symmetric(
                       vertical: screenHeight(context, mulBy: 0.02),
                       horizontal: screenWidth(context, mulBy: 0.04)),
@@ -557,7 +557,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage>
             child: Container(
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(50),
-                  color: Color(AppColors.commonOrange)),
+                  color: AppColors.commonOrange),
               padding: EdgeInsets.symmetric(
                   vertical: screenHeight(context, mulBy: 0.02),
                   horizontal: screenWidth(context, mulBy: 0.04)),
