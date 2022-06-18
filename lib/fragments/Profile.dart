@@ -239,7 +239,7 @@ class _ProfileState extends State<Profile> {
             child: Text(profileSubArray[index],
 
               style: TextStyle(
-                  color: Color(AppColors.commonOrange),
+                  color: AppColors.commonOrange,
                   fontWeight: FontWeight.bold
 
               ),
