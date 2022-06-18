@@ -49,7 +49,7 @@ class _CartState extends State<Cart> {
                       blurRadius: 3
                   )
                 ],
-                color: Color(AppColors.commonOrange)),
+                color: AppColors.commonOrange),
             padding: EdgeInsets.symmetric(
                 vertical: screenHeight(context, mulBy: 0.02),
                 horizontal: screenWidth(context, mulBy: 0.04)),
