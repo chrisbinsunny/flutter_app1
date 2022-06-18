@@ -31,26 +31,26 @@ List<PersistentBottomNavBarItem> _navBarsItems() {
     PersistentBottomNavBarItem(
       icon: Icon(CupertinoIcons.home),
       title: ("Home"),
-      activeColorPrimary: Color(AppColors.commonOrange),
-      activeColorSecondary:Color(AppColors.commonOrange),
+      activeColorPrimary: AppColors.commonOrange,
+      activeColorSecondary:AppColors.commonOrange,
       inactiveColorPrimary: CupertinoColors.systemGrey,
     ),
     PersistentBottomNavBarItem(
       icon: Icon(CupertinoIcons.search),
       title: ("Search"),
-      activeColorPrimary: Color(AppColors.commonOrange),
+      activeColorPrimary: AppColors.commonOrange,
       inactiveColorPrimary: CupertinoColors.systemGrey,
     ),
     PersistentBottomNavBarItem(
       icon: Icon(CupertinoIcons.bag),
       title: ("Cart"),
-      activeColorPrimary: Color(AppColors.commonOrange),
+      activeColorPrimary: AppColors.commonOrange,
       inactiveColorPrimary: CupertinoColors.systemGrey,
     ),
     PersistentBottomNavBarItem(
       icon: Icon(CupertinoIcons.person),
       title: ("Profile"),
-      activeColorPrimary: Color(AppColors.commonOrange),
+      activeColorPrimary: AppColors.commonOrange,
       inactiveColorPrimary: CupertinoColors.systemGrey,
     ),
   ];
