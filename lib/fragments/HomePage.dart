@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_app1/product_detail.dart';
+import 'package:flutter_app1/screens/prod_view.dart';
 import 'package:flutter_app1/widgets.dart';
 import '../Resources/AppColors.dart';
 import '../accounts/LoginPage.dart';
@@ -141,7 +142,7 @@ class _HomePageState extends State<HomePage>
                   height: screenHeight(context, mulBy: 0.3),
                   child: Center(
                       child: CircularProgressIndicator(
-                    color: Color(AppColors.commonOrange),
+                    color:AppColors.commonOrange,
                   )));
             },
           ),
@@ -219,7 +220,7 @@ class _HomePageState extends State<HomePage>
       controller: tabController,
       indicator: BubbleTabIndicator(
         indicatorHeight: 25.0,
-        indicatorColor: Color(AppColors.commonOrange),
+        indicatorColor: AppColors.commonOrange,
         tabBarIndicatorSize: TabBarIndicatorSize.tab,
       ),
       tabs: tabs,
@@ -245,7 +246,7 @@ class _HomePageState extends State<HomePage>
                 return ProductView(
                     onTap: () {
                       Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => ProductDetailsPage(
+                          builder: (context) => ProductDetail(
                                 id: snapshot.data[index].id,
                               )));
                     },
@@ -260,7 +261,7 @@ class _HomePageState extends State<HomePage>
               height: screenHeight(context, mulBy: 0.3),
               child: Center(
                   child: CircularProgressIndicator(
-                color: Color(AppColors.commonOrange),
+                color: AppColors.commonOrange,
               )));
         },
       ),
