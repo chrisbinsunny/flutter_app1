@@ -14,6 +14,6 @@ Future<void> main() async {
   runApp(
       MaterialApp(
         title: 'PoshRobe',
-        home: (userLoggedIn??false)? HomeBase(): LoginPage(),
+        home: (userLoggedIn??false)? HomePage(): LoginPage(),
       ));
 }
