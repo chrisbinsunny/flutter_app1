@@ -25,7 +25,7 @@ class _LoginPageState extends State<LoginPage> {
           padding: EdgeInsets.only(
             top: screenHeight(context, mulBy: 0.03)
           ),
-          color: Color(AppColors.commonOrange),
+          color: AppColors.commonOrange,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -113,7 +113,7 @@ class _LoginPageState extends State<LoginPage> {
                     // ),
                     // focusedBorder: OutlineInputBorder(
                     //   borderSide: BorderSide(
-                    //       color: Color(AppColors.commonOrange), width: 2.0),
+                    //       color: AppColors.commonOrange, width: 2.0),
                     //   borderRadius: BorderRadius.all(Radius.circular(32.0)),
                     // ),
                   ),
@@ -149,7 +149,7 @@ class _LoginPageState extends State<LoginPage> {
                             borderRadius: BorderRadius.circular(50.0),
                           )),
                       backgroundColor: MaterialStateProperty.all(
-                          Color(AppColors.commonOrange))),
+                          AppColors.commonOrange)),
                   onPressed: () async{
                     if(emailId.text.isValidEmail()) {
                       showLoaderDialog(context);
@@ -201,7 +201,7 @@ class _LoginPageState extends State<LoginPage> {
           'Forgot Password?',
           style: TextStyle(
               fontWeight: FontWeight.bold,
-              color: Color(AppColors.commonOrange)),
+              color: AppColors.commonOrange),
         ),
       ],
     );
