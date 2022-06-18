@@ -22,7 +22,7 @@ class _RegisterPageState extends State<RegisterPage> {
               child: Container(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height,
-                color: Color(AppColors.commonOrange),
+                color: AppColors.commonOrange,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -118,7 +118,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(
-                                color: Color(AppColors.commonOrange), width: 2.0),
+                                color: AppColors.commonOrange, width: 2.0),
                             borderRadius: BorderRadius.all(Radius.circular(32.0)),
                           ),
                         ),
@@ -144,7 +144,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(
-                                color: Color(AppColors.commonOrange), width: 2.0),
+                                color: AppColors.commonOrange, width: 2.0),
                             borderRadius: BorderRadius.all(Radius.circular(32.0)),
                           ),
                         ),
@@ -173,7 +173,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderSide: BorderSide(
-                                  color: Color(AppColors.commonOrange),
+                                  color: AppColors.commonOrange,
                                   width: 2.0),
                               borderRadius:
                               BorderRadius.all(Radius.circular(32.0)),
@@ -206,7 +206,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderSide: BorderSide(
-                                  color: Color(AppColors.commonOrange),
+                                  color: AppColors.commonOrange,
                                   width: 2.0),
                               borderRadius:
                               BorderRadius.all(Radius.circular(32.0)),
@@ -228,7 +228,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                   borderRadius: BorderRadius.circular(50.0),
                                 )),
                             backgroundColor: MaterialStateProperty.all(
-                                Color(AppColors.commonOrange))),
+                                AppColors.commonOrange)),
                         onPressed: () {
 
                           Navigator.push(
